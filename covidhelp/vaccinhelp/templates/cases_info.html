@@ -1,0 +1,250 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalOcean Droplets</title>
+    <link href="https://assets.digitalocean.com/logos/favicon.png" rel="shortcut icon" type="image/png"/>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        var keywords=[
+                'role',
+                'base',
+                'input',
+                'init',
+                'legal',
+                'true',
+                'next',
+                'does',
+                'goal',
+                'terminal',
+                'distinct',
+                'not',
+            ]
+            function numberWithCommas(x) {
+                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+            }
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+
+            function ajax(url, data, callback){
+                data ['csrfmiddlewaretoken'] = getCookie('csrftoken')
+                $.get(url, data , callback);
+            }
+        console.log("Hello world!");
+
+        $(document).ready(function(){
+        $('select#selectCountry').change(function () {
+                   console.log("Hello world!");
+                   var optionSelected = $(this).find("option:selected").val();
+                   console.log($.type(optionSelected));
+                   console.log(optionSelected);
+
+                    data = {'country_name' : optionSelected };
+
+                    ajax('get_covidinfo_bycountry',data,function(result){
+                        console.log(result);
+
+                        console.log(result[1].Confirmed);
+                        $("#totalcases h2").remove();
+                        $("#totalcases").text(''+numberWithCommas(result[1].Confirmed)+'');
+                        $("#totaldeaths h2").remove();
+                        $("#totaldeaths").text(''+numberWithCommas(result[1].Deaths)+'');
+                        $("#totalrecovered div").remove();
+                        $("#totalrecovered").text(''+numberWithCommas(result[1].Recovered)+'');
+                        $("#totalactive div").remove();
+                        $("#totalactive").text(''+numberWithCommas(result[1].Active)+'');
+                        $("#lastupdated div").remove();
+                        $("#lastupdated").append(''+(result[1].Date)+'<div/>');
+
+
+
+                        var yesterDayConfirmed = result[1].Confirmed - result[0].Confirmed
+                        var yesterDayDeaths = result[1].Deaths - result[0].Deaths
+                        var yesterDayRecovered = result[1].Recovered - result[0].Recovered
+                        var yesterDayActive = result[1].Active - result[0].Active
+                        var yesterDayDate = result[0].Date
+
+                        $("#yesterdaytotalcases h2").remove();
+                        $("#yesterdaytotalcases").text(''+numberWithCommas(yesterDayConfirmed)+'');
+                        $("#yesterdaytotaldeaths h2").remove();
+                        $("#yesterdaytotaldeaths").text(''+numberWithCommas(yesterDayDeaths)+'');
+                        $("#yesterdaytotalrecovered div").remove();
+                        $("#yesterdaytotalrecovered").text(''+numberWithCommas(yesterDayRecovered)+'');
+                        $("#yesterdaytotalactive div").remove();
+                        $("#yesterdaytotalactive").text(''+'N/A'+'');
+                        $("#yesterdaylastupdated div").remove();
+                        $("#yesterdaylastupdated").append(''+yesterDayDate+'<div/>');
+
+                 });
+             });
+            });
+
+
+
+    </script>
+</head>
+
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <a href="{% url 'index' %}" class="btn btn-success btn-lg mb-4 float-center">Covid Info</a>
+    <a href="{% url 'get_states' %}" class="btn btn-outline-success btn-lg mb-4">Vaccin Alert</a>
+    <div class="row d-flex justify-content-center">
+        <div class="">
+            <div class="select col-sm-6">
+                <form action="" method="POST">
+                    {%csrf_token%}
+                    <select id="selectCountry" name="">
+                        <option disabled selected>Global</option>
+                        {% for country in countries.Countries %}
+                        <option value="{{country.Country}}">{{ country.Country }}</option>
+                        {% endfor %}
+                    </select>
+                </form>
+            </div>
+        </div>
+    </div>
+
+
+<!--    <h2>Total Cases</h2>-->
+<!--    <h3>{{ countries.Global.TotalConfirmed }}</h3>-->
+<!--    <h2>New Cases</h2>-->
+<!--    {{ countries.Global.NewConfirmed  }}-->
+<!--    <h2>New Deaths</h2>-->
+<!--    {{ countries.Global.NewDeaths  }}-->
+<!--    <h2>Total Deaths</h2>-->
+<!--    {{ countries.Global.TotalDeaths }}-->
+
+<!--<h2>Total Cases</h2>-->
+<!--<div id="totalcases"></div>-->
+<!--<h2>Total Recovered</h2>-->
+<!--<div id="totalrecovered"></div>-->
+<!--<h2>Total Deaths</h2>-->
+<!--<div id="totaldeaths"></div>-->
+<!--<h2>Total Active</h2>-->
+<!--<div id="totalactive"></div>-->
+<!--<div id="lastupdated"></div>-->
+</div>
+
+
+<div class="container mt-2">
+    <div class="row m-1  mt-5 text-muted"><h5>Total Reported</h4></div>
+        <div class="row row-cols-2 bg-dark m-1  rounded">
+            <div class="col-sm-5" id="">
+                <div class="card text-white bg-dark ">
+                    <div class="card-body">
+                        <p class="fs-6 ">Total Cases</p>
+                        <h2 class="card-text text-danger" id="totalcases">
+                            {{countries.Global.TotalConfirmed}}
+                        </h2>
+    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-6" id="">
+                <div class="card text-white bg-dark ">
+                    <div class="card-body">
+                        <p class="fs-6 ">Recovered</p>
+                        <h2 class="card-text text-success" id="totalrecovered">
+                            {{countries.Global.TotalRecovered}}
+                        </h2>
+    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5" id="">
+                <div class="card text-white bg-dark ">
+                    <div class="card-body">
+                        <p class="fs-6">Total Deaths</p>
+                        <h2 class="card-text text-info" id="totaldeaths">
+                            {{countries.Global.TotalDeaths}}
+                        </h3>
+    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
+                    </div>
+                </div>
+            </div>
+                <div class="col-sm-5" id="">
+                    <div class="card text-white bg-dark ">
+                        <div class="card-body">
+                            <p class="fs-6 ">Total Active</p>
+                            <h2 class="card-text text-warning" id="totalactive">
+                                N/A
+                            </h3>
+    <!--                        <button class="btn btn-primary" type="button">Button</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<div class="container mt-2">
+    <div class="row m-2 mt-5 text-muted"><h5>Yesterday Reported</h4></div>
+        <div class="row row-cols-2 bg-dark m-2  rounded">
+            <div class="col-sm-5" id="">
+                <div class="card text-white bg-dark ">
+                    <div class="card-body">
+                        <p class="fs-6 ">Total Cases</p>
+                        <h2 class="card-text text-danger" id="yesterdaytotalcases">
+                            N/A
+                        </h2>
+    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5" id="">
+                <div class="card text-white bg-dark ">
+                    <div class="card-body">
+                        <p class="fs-6 ">Recovered</p>
+                        <h2 class="card-text text-success" id="yesterdaytotalrecovered">
+                            N/A
+                        </h2>
+    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
+                    </div>
+                </div>
+            </div>
+            <div class="col-sm-5" id="">
+                <div class="card text-white bg-dark ">
+                    <div class="card-body">
+                        <p class="fs-6">Total Deaths</p>
+                        <h2 class="card-text text-info" id="yesterdaytotaldeaths">
+                            N/A
+                        </h3>
+    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
+                    </div>
+                </div>
+            </div>
+                <div class="col-sm-5" id="">
+                    <div class="card text-white bg-dark ">
+                        <div class="card-body">
+                            <p class="fs-6 ">Total Active</p>
+                            <h2 class="card-text text-warning" id="yesterdaytotalactive">
+                                N/A
+                            </h3>
+    <!--<button class="btn btn-primary" type="button">Button</button>-->
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+        {% endblock %}
+
+
+</html>

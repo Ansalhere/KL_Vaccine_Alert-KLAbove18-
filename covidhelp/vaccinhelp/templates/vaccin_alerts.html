@@ -1,0 +1,360 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>DigitalOcean Droplets</title>
+    <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <script>
+        var telegram={
+            "Ernakulam":"https://t.me/ernakulam_vaccin_alerts",
+            "Idukki":"https://t.me/joinchat/_2jV36ZP7zc2ZDY1",
+            "Wayanad":"https://t.me/joinchat/jVSaEXLj5ag4ODc1",
+            "Thrissur":"https://t.me/joinchat/SCH8okiPisQ2M2M1",
+            "Thiruvananthapuram":"https://t.me/joinchat/DxLOsVqHrRswOTU1",
+            "Pathanamthitta":"https://t.me/joinchat/JsHg8K6zPicyZThl",
+            "Malappuram":"https://t.me/joinchat/IZxFBrrp2U02ZTU1",
+            "Palakkad":"https://t.me/joinchat/BGL0kM_cWzpjYTA1",
+            "Kozhikode":"https://t.me/joinchat/huDPq4QCI9Q0Mzk1",
+            "Kottayam":"https://t.me/joinchat/4Rn3zUFCdyM4Yzg1",
+            "Kollam":"https://t.me/joinchat/yF0qyiozNVw5NDNl",
+            "Kasaragod":"https://t.me/joinchat/iG4HKGD54lQxYTk1",
+            "Kannur":"https://t.me/joinchat/d_23EniUUExmNjY1",
+            "Alappuzha":"https://t.me/joinchat/PlC9oT2UZXE5ZDQ9"
+         }
+        var keywords=[
+                'role',
+                'base',
+                'input',
+                'init',
+                'legal',
+                'true',
+                'next',
+                'does',
+                'goal',
+                'terminal',
+                'distinct',
+                'not',
+            ]
+
+            function getCookie(name) {
+                var cookieValue = null;
+                if (document.cookie && document.cookie != '') {
+                    var cookies = document.cookie.split(';');
+                    for (var i = 0; i < cookies.length; i++) {
+                        var cookie = jQuery.trim(cookies[i]);
+                        // Does this cookie string begin with the name we want?
+                        if (cookie.substring(0, name.length + 1) == (name + '=')) {
+                            cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+                            break;
+                        }
+                    }
+                }
+                return cookieValue;
+            }
+
+
+            function ajax(url, data, callback){
+                data ['csrfmiddlewaretoken'] = getCookie('csrftoken')
+                $.get(url, data , callback);
+            }
+            $(document).ready(function(){
+                $("#loading").hide();
+                $("#slot").empty();
+                $("#telegram").empty();
+                $('select#selectState').change(function () {
+                        var optionSelected = $(this).find("option:selected").val();
+                            data = {'state_id' : optionSelected };
+                            ajax('get_districts',data,function(result){
+                                $("#selectDistrict").empty();
+                                $("#selectDistrict").append($("<option disabled ></option>")
+                                        .attr("value", "districts")
+                                        .text("Districts"))
+                                for (var i = result.districts.length - 1; i >= 0; i--) {
+                                    $("#selectDistrict").append($("<option></option>")
+                                        .attr("value", result.districts[i].district_id)
+                                        .text(result.districts[i].district_name))
+                                }
+                            });
+                });
+                function comp(a, b) {
+                    return new Date(a.date).getTime() - new Date(b.date).getTime();
+                  }
+
+                $("#pincodeForm").submit(function(e) {
+                    $("#selectSessions").empty();
+                    $("#sessions").empty();
+                    $("#SlotAvailability").empty();
+                    $("#loading").show();
+                    $("#telegram").empty();
+                    e.preventDefault(); // avoid to execute the actual submit of the form.
+                    data = {'pincode' : $("#pincode").val() ,
+                                };
+                        ajax('get_sessions_by_districts',data,function(result){
+                                
+                                var slotCheck = false
+                                for (var i = 0; result.session.length > i; i++) {
+                                    var newSession = result.session[i];
+                                    console.log(newSession.sessions)
+                                    //newSession.sessions.sort(comp)
+                                    for (var j = 0 ;newSession.centers.length > j ; j++){
+                                        
+                                        if(newSession.centers[j].fee_type == 'Free'){
+                                            var badge = ' bg-success ml-1'
+                                        }
+                                        else{
+                                            var badge = 'bg-danger ml-1'
+                                        }
+                                        if(newSession.centers[j].available_capacity_dose1>0){
+                                        slotCheck = true
+                                        var htmlcard = '<div class="col"><div class="card h-100 bg-dark text-white"><img src="" class="card-img-top" ><div class="card-body"><h8 class="card-title" id="sessions">'+newSession.centers[j].name+'<small class="float-right badge '+badge+'">'+newSession.centers[j].fee_type+'</small><small class="float-right badge rounded-pill bg-warning">'+newSession.centers[j].min_age_limit+'+</small></h8><p class="card-text mt-1 fs-6">'+newSession.centers[j].address+'</p><p class="m-1 badge bg-light text-dark">Available slots : '+newSession.centers[j].available_capacity+'</p><br><p class="m-1 badge bg-light text-dark">Dose 1 slots : '+newSession.centers[j].available_capacity_dose1+'</p><p class="m-1 badge bg-light text-dark">Dose 2 slots : '+newSession.centers[j].available_capacity_dose2+'</p></div><div class="card-footer"><small class="text-muted">Date : '+newSession.centers[j].date+'</small><small class="text-muted float-right">Vaccine : '+newSession.centers[j].vaccine+'</small></div></div></div'
+                                        $("#sessions").append(htmlcard)
+                                        $("#loading").hide();
+                                        }
+                                    }
+                                }
+                                if (slotCheck == false){
+                                    $("#loading").hide();
+                                    console.log('No Slots available')
+                                    $("#sessions").append('<div class="alert alert-danger" role="alert"><div id="SlotAvailability">No Slots available/updated for next seven days</div></div>')
+                                }
+                        });
+                });
+                $('select#selectDistrict').change(function () {
+                    $("#selectSessions").empty();
+                    $("#sessions").empty();
+                    $("#SlotAvailability").empty();
+                    $("#loading").show();
+                    $("#telegram").empty();
+                    var optionSelected = $(this).find("option:selected").val();
+                    var district = $(this).find("option:selected").text();
+                    console.log(district)
+                    console.log(telegram[district])
+                    if(telegram[district]!=''){
+                        $("#telegram").show();
+                        $("#telegram").append(telegram[district]);
+                    }
+                    for (var j = 0 ;telegram.length > j ; j++){
+                        console.log(telegram)
+                            if(optionSelected==telegram[j]){
+                                console.log(telegram[j])
+                            }
+                    }
+                        data = {'district_id' : optionSelected ,
+                                'date' : ""
+                                };
+                        ajax('get_sessions_by_districts',data,function(result){
+                            
+                        printSessionResults(result)
+
+                        });
+                    });
+
+                        function printSessionResults(result){
+                            
+                            console.log(result)
+                            console.log(result.session)
+                                var slotCheck = false
+                                for (var i = 0; result.session.length > i; i++) {
+                                    var newSession = result.session[i];
+                                    console.log(newSession.sessions)
+                                    //newSession.sessions.sort(comp)
+                                    for (var j = 0 ;newSession.sessions.length > j ; j++){
+                                        
+                                        if(newSession.sessions[j].fee_type == 'Free'){
+                                            var badge = ' bg-success ml-1'
+                                        }
+                                        else{
+                                            var badge = 'bg-danger ml-1'
+                                        }
+                                        if(newSession.sessions[j].available_capacity_dose1>0){
+                                        slotCheck = true
+                                        
+                                        var htmlcard = '<div class="col"><div class="card h-100 bg-dark text-white"><img src="" class="card-img-top" ><div class="card-body"><h8 class="card-title" id="sessions">'+newSession.sessions[j].name+'<small class="float-right badge '+badge+'">'+newSession.sessions[j].fee_type+'</small><small class="float-right badge rounded-pill bg-warning">'+newSession.sessions[j].min_age_limit+'+</small></h8><p class="card-text mt-1 fs-6">'+newSession.sessions[j].address+'</p><p class="m-1 badge bg-light text-dark">Available slots : '+newSession.sessions[j].available_capacity+'</p><br><p class="m-1 badge bg-light text-dark">Dose 1 slots : '+newSession.sessions[j].available_capacity_dose1+'</p><p class="m-1 badge bg-light text-dark">Dose 2 slots : '+newSession.sessions[j].available_capacity_dose2+'</p></div><div class="card-footer"><small class="text-muted">Date : '+newSession.sessions[j].date+'</small><small class="text-muted float-right">Vaccine : '+newSession.sessions[j].vaccine+'</small></div></div></div'
+                                        $("#sessions").append(htmlcard)
+                                        $("#loading").hide();
+                                        }
+                                    }
+                                }
+                                if (slotCheck == false){
+                                    $("#loading").hide();
+                                    console.log('No Slots available')
+                                    $("#sessions").append('<div class="alert alert-danger" role="alert"><div id="SlotAvailability">No Slots available/updated for next seven days</div></div>')
+                                }
+                            }
+            });
+    </script>
+</head>
+{% extends 'base.html' %}
+{% block content %}
+
+<div class="container ">
+    <a href="{% url 'index' %}" class="btn btn-outline-success btn-lg mb-4 float-center">Covid Info</a>
+    <a href="{% url 'get_states' %}" class="btn btn-success btn-lg mb-4">Vaccin Alert</a>
+    <div class="row ">
+        <div class=" col-sm-3 mb-2">
+            <form action="" method="POST">
+                {%csrf_token%}
+                <select id="selectState" class="form-select" name="">
+                    <option disabled selected>States</option>
+                    {% for state in states %}
+                        <option value="{{state.state_id}}">{{ state.state_name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
+        </div>
+        <div class="col-sm-3 mb-1">
+            <form action="" method="POST">
+                {%csrf_token%}
+                <select id="selectDistrict" class="form-select" name="">
+                    <option disabled selected>Districts</option>
+                </select>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="container text-center"><div class="mb-2 col-sm-3">OR </div>
+    <div class="float-center ">  
+    <form id="pincodeForm" class=" form-inline float-center">
+        <label class="sr-only" for="inlineFormInputName2">Name</label>
+        <input type="text" class="form-control mb-3 mr-sm-2" id="pincode" placeholder="Pincode">
+        <button type="submit" class="btn btn-primary mb-3">Submit</button>
+    </form>
+</div>
+</div>
+<div class="container ">
+    <div class="row ">
+        <div class=" col-sm-6 mb-2">
+        <div class="alert alert-primary" role="alert">
+            Book available slotes on <a style="" href="https://www.cowin.gov.in/home">
+                <b>cowin.gov.in</b>
+              </a>
+        </div>
+        </div>
+    </div>
+</div>
+<div class="container" id="telegram">
+    <div class="row ">
+        <div class=" col-sm-6 mb-2">
+        <div id="alertss" class="alert alert-primary" role="alert">
+            Telegram alert <a style="" href="https://www.cowin.gov.in/home">
+                <b>cowin.gov.in</b>
+              </a>
+              </div>
+        </div>
+    </div>
+</div>
+
+
+
+<div class="container ">
+    <div class="row row-cols-1 row-cols-sm-3 g-4 " id="sessions">
+    </div> 
+</div>
+    <div id="loading" class="p-3 text-center"><div class="loadingio-spinner-spinner-70hfitl2g">Searching..<div class="ldio-uglwfrhuisc">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        </div></div>
+        <style type="text/css">
+        @keyframes ldio-uglwfrhuisc {
+          0% { opacity: 1 }
+          100% { opacity: 0 }
+        }
+        .ldio-uglwfrhuisc div {
+          left: 61.1px;
+          top: 19.5px;
+          position: absolute;
+          animation: ldio-uglwfrhuisc linear 1s infinite;
+          background: #fe718d;
+          width: 7.800000000000001px;
+          height: 15.600000000000001px;
+          border-radius: 3.9000000000000004px / 7.800000000000001px;
+          transform-origin: 3.9000000000000004px 45.5px;
+        }.ldio-uglwfrhuisc div:nth-child(1) {
+          transform: rotate(0deg);
+          animation-delay: -0.9166666666666666s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(2) {
+          transform: rotate(30deg);
+          animation-delay: -0.8333333333333334s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(3) {
+          transform: rotate(60deg);
+          animation-delay: -0.75s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(4) {
+          transform: rotate(90deg);
+          animation-delay: -0.6666666666666666s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(5) {
+          transform: rotate(120deg);
+          animation-delay: -0.5833333333333334s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(6) {
+          transform: rotate(150deg);
+          animation-delay: -0.5s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(7) {
+          transform: rotate(180deg);
+          animation-delay: -0.4166666666666667s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(8) {
+          transform: rotate(210deg);
+          animation-delay: -0.3333333333333333s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(9) {
+          transform: rotate(240deg);
+          animation-delay: -0.25s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(10) {
+          transform: rotate(270deg);
+          animation-delay: -0.16666666666666666s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(11) {
+          transform: rotate(300deg);
+          animation-delay: -0.08333333333333333s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(12) {
+          transform: rotate(330deg);
+          animation-delay: 0s;
+          background: #fe718d;
+        }
+        .loadingio-spinner-spinner-70hfitl2g {
+          width: 130px;
+          height: 130px;
+          display: inline-block;
+          overflow: hidden;
+          background: #161517;
+        }
+        .ldio-uglwfrhuisc {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          transform: translateZ(0) scale(1);
+          backface-visibility: hidden;
+          transform-origin: 0 0; /* see note above */
+        }
+        .ldio-uglwfrhuisc div { box-sizing: content-box; }
+        /* generated by https://loading.io/ */
+        </style>
+    </div>
+</div>
+<div class="container mt-5 mb-4">
+    <div class="row ">
+        <div class=" col-sm-6 mb-2">
+<form id="feedback" class="">
+    <div class="form-group">
+        <label class="light fs-6 fw-lighter fw-light font-monospace" for="exampleFormControlTextarea1">Request/Feedback</label>
+        <textarea class="form-control fst-italic" id="exampleFormControlTextarea1" placeholder="Add telegram group for 683556 pincode" rows="3"></textarea>
+      </div>
+    <div class="form-group">
+      <label class="font-monospace fs-6" for="exampleFormControlInput1">Email address</label>
+      <input type="email" class="form-control fst-italic" id="exampleFormControlInput1" placeholder="name@example.com">
+    </div>
+    
+    <button type="submit" class="btn btn-primary">Send Feedback</button>
+  </form>
+  </div>
+  </div>
+</div>
+{% endblock %}
+</html>
