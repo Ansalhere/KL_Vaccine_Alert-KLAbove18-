@@ -1,47 +1,74 @@
 import datetime
 import json
 import simplejson as simplejson
-from dateutil.tz import tz
 from django.shortcuts import render
 from django.http import HttpResponse
 import requests
 
-from .models import Contact
+# from .models import Contact
 
-base_cowin_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin"
+
 now = datetime.datetime.now()
 today_date = now.strftime("%d-%m-%Y")
 district_id = 683556
 api_telegram_url = "https://api.telegram.org/bot1829919952:AAE2GSjSQ3_LAORy-E57Uj1bvZnsYeaxvhE/sendMessage?chat_id=@__groupid__&text="
-group_id = "ernakulam_vaccin_alerts"
-def fetch_data_from_cowin(district_id):
+group_id = "ernakulam_vaccin_alert"
+
+telegram_mapping = {
+    '307':'ernakulam_vaccin_alert',
+    '301':'alappuzha_vaccin_alert',
+    '306':'idukki_vaccin_alert',
+    '297':'Kannur_vaccin_alert',
+    '295':'Kasaragod_vaccin_alert',
+    '298':'Kollam_vaccin_alert',
+    '304':'Kottayam_vaccin_alert',
+    '305':'Kozhikode_vaccin_alert',
+    '302':'Malappuram_vaccin_alert',
+    '308':'Palakkad_vaccin_alert',
+    '300':'Pathanamthitta_vaccin_alert',
+    '296':'Thiruvananthapuram_vaccin_alert',
+    '303':'Thrissur_vaccin_alert',
+    '299':'Wayanad_vaccin_alert',
+}
+
+def dist_fetch_data_from_cowin(district_id):
+    district_base_cowin_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByDistrict"
+    query_params = "?district_id={}&date={}".format(district_id,today_date)
+    headers = {
+        'Host': 'cdn-api.co-vin.in',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    }
+    final_url = district_base_cowin_url+query_params
+    print(final_url)
+    response = requests.request("GET",final_url,headers=headers)
+    print(response)
+    extract_availability_data(response)
+def fetch_data_from_cowin(pincode):
+    pin_base_cowin_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin"
     query_params = "?pincode={}&date={}".format("683556",today_date)
     headers = {
         'Host': 'cdn-api.co-vin.in',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
     }
-    final_url = base_cowin_url+query_params
-
-    print(final_url)
+    final_url = pin_base_cowin_url+query_params
     response = requests.request("GET",final_url,headers=headers)
-
     extract_availability_data(response)
-
-
 def send_message_telegram(message):
     final_telegram_url = api_telegram_url.replace("__groupid__",group_id)
     final_telegram_url = final_telegram_url+message
     print(final_telegram_url)
     response = requests.get(final_telegram_url)
     print(response.text)
-
-
 def extract_availability_data(response):
     response_json = response.json()
+    print(response_json)
     for center in response_json["centers"]:
         for session in center["sessions"]:
              #if session["available_capacity_dose1"] > 0 or session["available_capacity_dose1"] > 0 and session["min_age_limit"]==45:
-                message = "Pincode: {}, Name: {}, Slots: {},Minimum Age: {}".format(
+                message = "Pincode: {}, " \
+                          "Name: {}, " \
+                          "Slots: {}," \
+                          "Minimum Age: {}".format(
                 center["center_id"], center["name"],
                 session["available_capacity_dose1"],
                 session["min_age_limit"]
@@ -113,6 +140,7 @@ def get_sessions_by_districts(request):
     payload = []
     session={'session':[]}
     if(pincode!=None):
+        base_cowin_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin"
         print("inside pincode")
         query_params = "?pincode={}&date={}".format(pincode, today_date)
         api_url = base_cowin_url+query_params;
@@ -155,11 +183,11 @@ def get_sessions_by_districts(request):
 
     return HttpResponse(simplejson.dumps(session), content_type='application/json')
 
-def get_feedback(request):
-    if request.method == 'POST':
-        email = request.GET.get('email')
-        message = request.GET.get('message')
-        c = Contact(email=email,message=message)
-        response = {"message":"Request/Feedbck sent successfully"}
-
-        return HttpResponse(simplejson.dumps(response), content_type='application/json')
+# def get_feedback(request):
+#     if request.method == 'POST':
+#         email = request.GET.get('email')
+#         message = request.GET.get('message')
+#         c = Contact(email=email,message=message)
+#         response = {"message":"Request/Feedbck sent successfully"}
+#
+#         return HttpResponse(simplejson.dumps(response), content_type='application/json')
