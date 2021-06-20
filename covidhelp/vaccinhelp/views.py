@@ -1,7 +1,6 @@
 import datetime
 import json
 import simplejson as simplejson
-from dateutil.tz import tz
 from django.shortcuts import render
 from django.http import HttpResponse
 import requests
