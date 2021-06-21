@@ -5,6 +5,12 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigitalOcean Droplets</title>
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+      crossorigin="anonymous"
+    />
     <script>
         var telegram={
             "Ernakulam":"https://t.me/ernakulam_vaccin_alerts",
@@ -132,7 +138,7 @@
                     console.log(telegram[district])
                     if(telegram[district]!=''){
                         $("#telegram").show();
-                        $("#telegram").append(telegram[district]);
+                        $("#telegram").append('<div class="row"><a style="text-color:#0084C6;" href='+telegram[district]+'><div class="col-sm-6 mb-2"><div class="alert alert-light text-center" role="alert"><i style="color:#0084C6;" class="fab fa-2x fa-telegram pb-1"></i><b><br><h6>  Join '+district+' </i>Vaccin Alert Group</b></div></div></a></div>')
                     }
                     for (var j = 0 ;telegram.length > j ; j++){
                         console.log(telegram)
@@ -179,7 +185,7 @@
                                 if (slotCheck == false){
                                     $("#loading").hide();
                                     console.log('No Slots available')
-                                    $("#sessions").append('<div class="alert alert-danger" role="alert"><div id="SlotAvailability">No Slots available/updated for next seven days</div></div>')
+                                    $("#sessions").append('<div class="col"><div class="alert alert-danger" role="alert"><div id="SlotAvailability">No Slots available/updated for next seven days</div></div>')
                                 }
                             }
             });
@@ -233,15 +239,9 @@
         </div>
     </div>
 </div>
-<div class="container" id="telegram">
-    <div class="row ">
-        <div class=" col-sm-6 mb-2">
-        <div id="alertss" class="alert alert-primary" role="alert">
-            Telegram alert <a style="" href="https://www.cowin.gov.in/home">
-                <b>cowin.gov.in</b>
-              </a>
-              </div>
-        </div>
+
+<div class="container" id="telegram" >
+
     </div>
 </div>
 
