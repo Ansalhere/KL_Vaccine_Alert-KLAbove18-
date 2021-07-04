@@ -102,8 +102,9 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <a href="{% url 'index' %}" class="btn btn-success btn-lg mb-4 float-center rounded-pill">Covid Info</a>
-    <a href="{% url 'get_states' %}" class="btn btn-outline-success btn-lg mb-4 rounded-pill">Vaccin Alert</a>
+    <a href="{% url 'index_ml' %}" class="btn btn-success btn-lg mb-4 float-center rounded-pill"><small>കോവിഡ് റിപ്പോർട്ട്</small></a>
+    <a href="{% url 'get_states_ml' %}" class="btn btn-outline-success btn-lg mb-4 rounded-pill"><small>വാക്‌സിൻ അലെർട്</small></a>
+
     <div class="row d-flex justify-content-center">
         <div class="">
             <div class="select col-sm-6">
@@ -143,12 +144,12 @@
 
 
 <div class="container mt-2">
-    <div class="row m-1  mt-5 text-muted"><h5>Total Reported</h4></div>
+    <div class="row m-1  mt-5 text-muted"><h5>ആകെ റിപ്പോർട്ട് ചെയ്തത്</h4></div>
         <div class="row row-cols-2 bg-dark m-1  rounded">
             <div class="col-sm-5" id="">
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
-                        <p class="fs-6 ">Total Cases</p>
+                        <p class="fs-6 ">ആകെ രോഗികൾ</p>
                         <h2 class="card-text text-danger" id="totalcases">
                             <small>{{countries.Global.TotalConfirmed}}</small>
                         </h2>
@@ -159,7 +160,7 @@
             <div class="col-sm-6" id="">
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
-                        <p class="fs-6 ">Recovered</p>
+                        <p class="fs-6 ">രോഗം മാറിയവർ</p>
                         <h2 class="card-text text-success" id="totalrecovered">
                             <small>{{countries.Global.TotalRecovered}}</small>
                         </h2>
@@ -170,7 +171,7 @@
             <div class="col-sm-5" id="">
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
-                        <p class="fs-6">Total Deaths</p>
+                        <p class="fs-6">ആകെ മരണം</p>
                         <h2 class="card-text text-info" id="totaldeaths">
                             <small>{{countries.Global.TotalDeaths}}</small>
                         </h3>
@@ -181,9 +182,9 @@
                 <div class="col-sm-5" id="">
                     <div class="card text-white bg-dark ">
                         <div class="card-body">
-                            <p class="fs-6 ">Total Active</p>
+                            <p class="fs-6 ">ചികിത്സയിലുള്ള രോഗികൾ</p>
                             <h2 class="card-text text-warning" id="totalactive">
-                                <small>N/A</small>
+                                N/A
                             </h3>
     <!--                        <button class="btn btn-primary" type="button">Button</button>-->
                         </div>
@@ -194,14 +195,14 @@
     </div>
 </div>
 <div class="container mt-2">
-    <div class="row m-2 mt-5 text-muted"><h5>Yesterday Reported</h4></div>
+    <div class="row m-2 mt-5 text-muted"><h5>ഇന്നലെ റിപ്പോർട്ട് ചെയ്തത്</h4></div>
         <div class="row row-cols-2 bg-dark m-2  rounded">
             <div class="col-sm-5" id="">
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
-                        <p class="fs-6 ">Total Cases</p>
+                        <p class="fs-6 ">ആകെ രോഗികൾ</p>
                         <h2 class="card-text text-danger" id="yesterdaytotalcases">
-                            N/A
+                            <small>N/A</small>
                         </h2>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
                     </div>
@@ -210,7 +211,7 @@
             <div class="col-sm-5" id="">
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
-                        <p class="fs-6 ">Recovered</p>
+                        <p class="fs-6 ">രോഗം മാറിയവർ</p>
                         <h2 class="card-text text-success" id="yesterdaytotalrecovered">
                             N/A
                         </h2>
@@ -221,7 +222,7 @@
             <div class="col-sm-5" id="">
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
-                        <p class="fs-6">Total Deaths</p>
+                        <p class="fs-6">ആകെ മരണം</p>
                         <h2 class="card-text text-info" id="yesterdaytotaldeaths">
                             N/A
                         </h3>
@@ -232,7 +233,7 @@
                 <div class="col-sm-5" id="">
                     <div class="card text-white bg-dark ">
                         <div class="card-body">
-                            <p class="fs-6 ">Total Active</p>
+                            <p class="fs-6 ">ചികിത്സയിലുള്ള രോഗികൾ</p>
                             <h2 class="card-text text-warning" id="yesterdaytotalactive">
                                 N/A
                             </h3>

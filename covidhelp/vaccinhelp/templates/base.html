@@ -88,6 +88,9 @@
           background-color: #2E0323;
           text-align: center;
         }
+        .navbar-nav {
+            margin-left: auto;
+        }
     </style>
     {% block style %}
     {% endblock %}
@@ -97,21 +100,33 @@
 </head>
 <body>
 <header>
-<nav aria-label="main navigation" class="navbar is-light shadow-lg mb-4" role="navigation">
-<div class="container navbar-brand shadow-lg">
-    <div class=" navbar-item">
-        <img atl="" src="">KL Vaccin Alerts
+
+
+<nav aria-label="main navigation" class="navbar is-light shadow-lg navbar-expand-sm mb-2 bg-dark" role="navigation">
+<div class="container navbar-brand shadow row">
+    <div class=" navbar-item mb-1 col-md-6">
+        {% load static %} <img src="{% static "admin/img/KLAbove18.png" %}" width=60%; />
     </div>
+    {% if request.path == "/ml" or request.path == "/get_states_ml" %}
+    <div class="float-sm-right  col-md-4">
+    <a href="{% url 'index' %}" class="btn btn-outline-light btn-sm mb-1 float-center rounded-pill d-inline"><small>English</small></a>
+        <a href="{% url 'index_ml' %}" class="btn btn-light btn-sm mb-1 rounded-pill d-inline"><small>മലയാളം</small></a></div>
+    {% else %}
+    <div class="float-sm-right col-md-4">
+    <a href="{% url 'index' %}" class="btn btn-light btn-sm mb-1 float-center rounded-pill d-inline">English</a>
+        <a href="{% url 'index_ml' %}" class="btn btn-outline-light btn-sm mb-1 rounded-pill d-inline">മലയാളം</a></div>
+    {% endif %}
+
 </div>
 </nav>
 </header>
     {% block content %}
     {% endblock %}
-    <div class="footer mt-2">This will always appear at the bottom of the page, but <strong>not fixed</strong>.</div>
-  
+    <div class="footer mt-2">Developed By <strong>@ansalka</strong>.</div>
+
 </body>
   <!-- Footer -->
-  
+
   <!-- Footer -->
 <!-- Footer -->
 </html>

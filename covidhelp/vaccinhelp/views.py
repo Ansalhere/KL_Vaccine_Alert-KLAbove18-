@@ -23,12 +23,12 @@ telegram_mapping = {
     '298':'Kollam_vaccin_alert',
     '304':'Kottayam_vaccin_alert',
     '305':'Kozhikode_vaccin_alert',
-    '302':'Malappuram_vaccin_alert',
-    '308':'Palakkad_vaccin_alert',
-    '300':'Pathanamthitta_vaccin_alert',
-    '296':'Thiruvananthapuram_vaccin_alert',
-    '303':'Thrissur_vaccin_alert',
-    '299':'Wayanad_vaccin_alert',
+    '302':'malappuramvaccine_alert',
+    '308':'palakkadvaccine_alert',
+    '300':'Pathanamthittavaccine_alert',
+    '296':'Thiruvananthapuramvaccine_alert',
+    '303':'Thrissurvaccine_alert',
+    '299':'Wayanadvaccine_alert',
 }
 
 def dist_fetch_data_from_cowin(district_id):
@@ -42,42 +42,59 @@ def dist_fetch_data_from_cowin(district_id):
     print(final_url)
     response = requests.request("GET",final_url,headers=headers)
     print(response)
-    extract_availability_data(response)
+    extract_availability_data(response,district_id)
 def fetch_data_from_cowin(pincode):
     pin_base_cowin_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/calendarByPin"
-    query_params = "?pincode={}&date={}".format("683556",today_date)
+    query_params = "?pincode={}&date={}".format(pincode,today_date)
     headers = {
         'Host': 'cdn-api.co-vin.in',
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
     }
     final_url = pin_base_cowin_url+query_params
     response = requests.request("GET",final_url,headers=headers)
-    extract_availability_data(response)
-def send_message_telegram(message):
-    final_telegram_url = api_telegram_url.replace("__groupid__",group_id)
+    extract_availability_data(response,pincode)
+def send_message_telegram(message,id):
+
+    final_telegram_url = api_telegram_url.replace("__groupid__",telegram_mapping[str(id)])
     final_telegram_url = final_telegram_url+message
     print(final_telegram_url)
     response = requests.get(final_telegram_url)
     print(response.text)
-def extract_availability_data(response):
+def extract_availability_data(response,id):
     response_json = response.json()
     print(response_json)
     for center in response_json["centers"]:
         for session in center["sessions"]:
-             #if session["available_capacity_dose1"] > 0 or session["available_capacity_dose1"] > 0 and session["min_age_limit"]==45:
-                message = "Pincode: {}, " \
-                          "Name: {}, " \
-                          "Slots: {}," \
-                          "Minimum Age: {}".format(
-                center["center_id"], center["name"],
+              try:
+                  if session["max_age_limit"]:
+                       max_age = session["max_age_limit"]
+              except KeyError:
+                       max_age = ""
+              if session["available_capacity_dose1"] > 0 or session["available_capacity_dose2"] > 0 :
+                message = "പ്രായം: {} - {} \n" \
+                          "സ്ഥലം: {}, \n" \
+                          "1st ഡോസ് വാക്‌സിൻ സ്ലോട്ട്: {},\n"\
+                          "2nd ഡോസ് വാക്‌സിൻ സ്ലോട്ട്: {},\n" \
+                          "വാക്‌സിൻ : {},\n"\
+                          "പിൻകോഡ്: {}, \n"\
+                              .format(
+                session["min_age_limit"],
+                max_age,
+                center["name"],
                 session["available_capacity_dose1"],
-                session["min_age_limit"]
+                session["available_capacity_dose2"],
+                session["vaccine"],
+                center["center_id"],
                 )
-                send_message_telegram(message)
+                send_message_telegram(message,id)
 # Create your views here.
 def index(request):
     context = get_summary()
     return render(request, "cases_info.html", context)
+
+def index_ml(request):
+    context = get_summary()
+    return render(request, "cases_info_ml.html", context)
 
 def get_covidinfo_bycountry(request):
     country_name = request.GET.get('country_name')
@@ -113,8 +130,25 @@ def get_states(request):
     }
 
     response = requests.request("GET", api_url, headers=headers)
-    payload = response.json()
+    try:
+        payload = response.json()
+    except:
+        print(" NO Payload")
     return render(request,'vaccin_alerts.html',payload )
+
+def get_states_ml(request):
+    api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
+    headers = {
+        'Host': 'cdn-api.co-vin.in',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    }
+
+    response = requests.request("GET", api_url, headers=headers)
+    try:
+        payload = response.json()
+    except:
+        print(" NO Payload")
+    return render(request,'vaccin_alerts_ml.html',payload )
 
 def get_districts(request):
 

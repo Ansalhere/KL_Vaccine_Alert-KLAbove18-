@@ -136,9 +136,9 @@
                     var district = $(this).find("option:selected").text();
                     console.log(district)
                     console.log(telegram[district])
-                    if(telegram[district]!=''){
+                    if(telegram[district]){
                         $("#telegram").show();
-                        $("#telegram").append('<div class="row"><a style="text-color:#0084C6;" href='+telegram[district]+' target="_blank"><div class="col-sm-6 mb-2"><div class="alert alert-light text-center" role="alert"><i style="color:#0084C6;" class="fab fa-2x fa-telegram pb-1"></i><b><br><h6>  Join '+district+' </i>Vaccin Alert Group</b></div></div></a></div>')
+                        $("#telegram").append('<div class="row"><a style="text-color:#0084C6;" href='+telegram[district]+'><div class="col-sm-6 mb-2"><div class="alert alert-light text-center" role="alert"><i style="color:#0084C6;" class="fab fa-2x fa-telegram pb-1"></i><b><br><h6>  Join '+district+' </i>Vaccin Alert Group</b></div></div></a></div>')
                     }
                     for (var j = 0 ;telegram.length > j ; j++){
                         console.log(telegram)
@@ -154,6 +154,7 @@
                         printSessionResults(result)
 
                         });
+
                     });
 
                         function printSessionResults(result){
@@ -176,7 +177,7 @@
                                         if(newSession.sessions[j].available_capacity_dose1>0){
                                         slotCheck = true
 
-                                        var htmlcard = '<div class="col"><div class="card h-100 bg-dark text-white"><img src="" class="card-img-top" ><div class="card-body"><h8 class="card-title" id="sessions">'+newSession.sessions[j].name+'<small class="float-right badge '+badge+'">'+newSession.sessions[j].fee_type+'</small><small class="float-right badge rounded-pill bg-warning">'+newSession.sessions[j].min_age_limit+'+</small></h8><p class="card-text mt-1 fs-6">'+newSession.sessions[j].address+'</p><p class="m-1 badge bg-light text-dark">Available slots : '+newSession.sessions[j].available_capacity+'</p><br><p class="m-1 badge bg-light text-dark">Dose 1 slots : '+newSession.sessions[j].available_capacity_dose1+'</p><p class="m-1 badge bg-light text-dark">Dose 2 slots : '+newSession.sessions[j].available_capacity_dose2+'</p></div><div class="card-footer"><small class="text-muted">Date : '+newSession.sessions[j].date+'</small><small class="text-muted float-right">Vaccine : '+newSession.sessions[j].vaccine+'</small></div></div></div'
+                                        var htmlcard = '<div class="col"><div class="card h-100 bg-dark text-white"><img src="" class="card-img-top" ><div class="card-body"><h8 class="card-title" id="sessions">സ്ഥലം :'+newSession.sessions[j].name+'<small class="float-right badge '+badge+'">'+newSession.sessions[j].fee_type+'</small><small class="float-right badge rounded-pill bg-warning">'+newSession.sessions[j].min_age_limit+'+</small></h8><p class="card-text mt-1 fs-6">'+newSession.sessions[j].address+'</p><p class="m-1 badge bg-light text-dark">ആകെ സ്ലോട്ട് : '+newSession.sessions[j].available_capacity+'</p><br><p class="m-1 badge bg-light text-dark">1st ഡോസ് സ്ലോട്ട് : '+newSession.sessions[j].available_capacity_dose1+'</p><p class="m-1 badge bg-light text-dark">2nd ഡോസ് സ്ലോട്ട് : '+newSession.sessions[j].available_capacity_dose2+'</p></div><div class="card-footer"><small class="text-muted">ദിവസം : '+newSession.sessions[j].date+'</small><small class="text-muted float-right">വാക്‌സിൻ : '+newSession.sessions[j].vaccine+'</small></div></div></div'
                                         $("#sessions").append(htmlcard)
                                         $("#loading").hide();
                                         }
@@ -196,14 +197,14 @@
 
 <div class="container ">
 
-    <a href="{% url 'index' %}" class="btn btn-outline-success btn-lg mb-4 float-center rounded-pill">Covid Info</a>
-    <a href="{% url 'get_states' %}" class="btn btn-success btn-lg mb-4 rounded-pill">Vaccine Alert</a>
+    <a href="{% url 'index_ml' %}" class="btn btn-outline-success btn-lg mb-4 float-center rounded-pill">കോവിഡ് റിപ്പോർട്ട്</a>
+    <a href="{% url 'get_states_ml' %}" class="btn btn-success btn-lg mb-4 rounded-pill">വാക്‌സിൻ അലെർട്</a>
     <div class="row ">
         <div class=" col-sm-3 mb-2">
             <form action="" method="POST">
                 {%csrf_token%}
                 <select id="selectState" class="form-select" name="">
-                    <option disabled selected>States</option>
+                    <option disabled selected>സംസ്ഥാനം തിരഞ്ഞെടുക്കുക</option>
                     {% for state in states %}
                         <option value="{{state.state_id}}">{{ state.state_name }}</option>
                     {% endfor %}
@@ -214,7 +215,7 @@
             <form action="" method="POST">
                 {%csrf_token%}
                 <select id="selectDistrict" class="form-select" name="">
-                    <option disabled selected>Districts</option>
+                    <option disabled selected>ജില്ല തിരഞ്ഞടുക്കുക</option>
                 </select>
             </form>
         </div>
@@ -224,7 +225,7 @@
     <div class="float-center ">
     <form id="pincodeForm" class=" form-inline float-center">
         <label class="sr-only" for="inlineFormInputName2">Name</label>
-        <input type="text" class="form-control mb-3 mr-sm-2" id="pincode" placeholder="Pincode">
+        <input type="text" class="form-control mb-3 mr-sm-2" id="pincode" placeholder="പിൻകോഡ്">
         <button type="submit" class="btn btn-primary mb-3">Submit</button>
     </form>
 </div>
@@ -233,7 +234,7 @@
     <div class="row ">
         <div class=" col-sm-6 mb-2">
         <div class="alert alert-primary" role="alert">
-            Book available slotes on <a style="" href="https://www.cowin.gov.in/home">
+            സ്ലോട്ട് ബുക്ക്‌ ചെയ്യാൻ: <a style="" href="https://www.cowin.gov.in/home">
                 <b>cowin.gov.in</b>
               </a>
         </div>
