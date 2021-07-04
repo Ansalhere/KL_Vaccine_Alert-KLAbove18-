@@ -16,7 +16,6 @@ import os
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
 BASE_DIR = Path(__file__).resolve().parent.parent
 
-SECRET_KEY = '3kb))k4fs93xo3dr&f_284tp3i-m8gh5*8#k23c5yah6yjl&qd'
 
 
 # Quick-start development settings - unsuitable for production
