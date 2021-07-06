@@ -1,11 +1,3 @@
-username: admin
-pwd: +cMpDeV%123&
-
-cmp-rds.cx2tvknt26xf.eu-central-1.rds.amazonaws.com
-
-9223372036854775807|||"PDC2PDC2W"||CN=PDC2PDC2W,OU=Servers,DC=bcg,DC=com|"PDC2PDC2W.bcg.com"||132198265
-
-
 asgiref==3.3.1
 asn1crypto==1.4.0
 azure-common==1.1.26
