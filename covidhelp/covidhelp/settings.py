@@ -14,7 +14,7 @@ from pathlib import Path
 import os
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
-BASE_DIR = Path(__file__).resolve()
+BASE_DIR = Path(__file__).resolve().parent
 
 SECRET_KEY = "nlb3$o2$!)!6^z2p_fb2e4e4y)9w8d2t*t-9m5ti#b1gy-hv^q"
 
@@ -120,6 +120,6 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/3.1/howto/static-files/
 
 STATICFILES_DIRS = [
-    os.path.join(BASE_DIR, 'static')
+    os.path.join(BASE_DIR, 'vaccinhelp/static')
 ]
 STATIC_URL = '/static/'
