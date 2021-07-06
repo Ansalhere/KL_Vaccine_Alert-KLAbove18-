@@ -29,7 +29,6 @@ jsonify==0.5
 keyring==21.4.0
 MarkupSafe==1.1.1
 mkl-fft==1.2.0
-mkl-random==1.1.1
 mkl-service==2.3.0
 msrest==0.6.19
 Naked==0.1.31
