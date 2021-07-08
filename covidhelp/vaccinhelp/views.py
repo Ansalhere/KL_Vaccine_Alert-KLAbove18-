@@ -122,6 +122,13 @@ def get_country(country):
     response = requests.request("GET", url)
     return response.json()
 
+def get_states_new(request):
+    api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
+
+
+    response = requests.request("GET", api_url)
+    return render(request, 'vaccin_alerts.html', response.json())
+
 def get_states(request):
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
     headers = {
