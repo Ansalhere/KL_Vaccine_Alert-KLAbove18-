@@ -123,6 +123,7 @@ def get_country(country):
     return response.json()
 
 def get_states(request):
+    global payload
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
     # headers = {
     #     'Host': 'cdn-api.co-vin.in',
