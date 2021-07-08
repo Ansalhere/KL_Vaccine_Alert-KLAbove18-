@@ -123,11 +123,10 @@ def get_country(country):
     return response.json()
 
 def get_states(request):
-    global payload
+
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
     response = requests.request("GET", api_url)
-    payload = response.json()
-    return render(request,'vaccin_alerts.html',payload )
+    return render(request,'vaccin_alerts.html',response.json() )
 
 def get_states_ml(request):
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
