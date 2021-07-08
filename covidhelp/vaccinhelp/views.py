@@ -126,7 +126,9 @@ def get_states(request):
 
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
     response = requests.request("GET", api_url)
-    return render(request,'vaccin_alerts.html',response.json() )
+    droplets = response.json()
+
+    return render(request,'vaccin_alerts.html',droplets)
 
 def get_states_ml(request):
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
@@ -136,8 +138,8 @@ def get_states_ml(request):
     # }
 
     response = requests.request("GET", api_url)
-    payload = response.json()
-    return render(request,'vaccin_alerts_ml.html',payload )
+    droplets = response.json()
+    return render(request,'vaccin_alerts_ml.html',droplets )
 
 def get_districts(request):
 
