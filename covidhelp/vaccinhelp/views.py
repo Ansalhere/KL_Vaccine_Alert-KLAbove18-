@@ -123,7 +123,6 @@ def get_country(country):
     return response.json()
 
 def get_states(request):
-    payload = ""
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
     # headers = {
     #     'Host': 'cdn-api.co-vin.in',
@@ -131,10 +130,7 @@ def get_states(request):
     # }
 
     response = requests.request("GET", api_url)
-    try:
-        payload = response.json()
-    except:
-        print(" NO Payload")
+    payload = response.json()
     return render(request,'vaccin_alerts.html',payload )
 
 def get_states_ml(request):
