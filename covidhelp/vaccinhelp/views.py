@@ -123,13 +123,14 @@ def get_country(country):
     return response.json()
 
 def get_states(request):
+    payload = ""
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
-    headers = {
-        'Host': 'cdn-api.co-vin.in',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-    }
+    # headers = {
+    #     'Host': 'cdn-api.co-vin.in',
+    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    # }
 
-    response = requests.request("GET", api_url, headers=headers)
+    response = requests.request("GET", api_url)
     try:
         payload = response.json()
     except:
@@ -138,28 +139,25 @@ def get_states(request):
 
 def get_states_ml(request):
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
-    headers = {
-        'Host': 'cdn-api.co-vin.in',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-    }
+    # headers = {
+    #     'Host': 'cdn-api.co-vin.in',
+    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    # }
 
-    response = requests.request("GET", api_url, headers=headers)
-    try:
-        payload = response.json()
-    except:
-        print(" NO Payload")
+    response = requests.request("GET", api_url)
+    payload = response.json()
     return render(request,'vaccin_alerts_ml.html',payload )
 
 def get_districts(request):
 
     state_id = request.GET.get('state_id')
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/districts/"+state_id
-    headers = {
-        'Host': 'cdn-api.co-vin.in',
-        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-    }
+    # headers = {
+    #     'Host': 'cdn-api.co-vin.in',
+    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    # }
 
-    response = requests.request("GET", api_url, headers=headers)
+    response = requests.request("GET", api_url)
     payload = response.json()
     print(payload)
     return HttpResponse(simplejson.dumps(payload),content_type='application/json')
@@ -190,12 +188,12 @@ def get_sessions_by_districts(request):
     elif (dateSelected!= ''):
             print('Hi')
             api_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=" + district_id + "&date=" + dateSelected
-            headers = {
-                'Host': 'cdn-api.co-vin.in',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-            }
+            # headers = {
+            #     'Host': 'cdn-api.co-vin.in',
+            #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+            # }
 
-            response = requests.request("GET", api_url, headers=headers)
+            response = requests.request("GET", api_url)
             session['session'].append(response.json())
     else:
         print("Inside date")
@@ -206,12 +204,12 @@ def get_sessions_by_districts(request):
 
         for date in dates:
             api_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=" + district_id + "&date=" + date
-            headers = {
-                'Host': 'cdn-api.co-vin.in',
-                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-            }
+            # headers = {
+            #     'Host': 'cdn-api.co-vin.in',
+            #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+            # }
 
-            response = requests.request("GET", api_url, headers=headers)
+            response = requests.request("GET", api_url)
             session['session'].append(response.json())
             print(session)
 
