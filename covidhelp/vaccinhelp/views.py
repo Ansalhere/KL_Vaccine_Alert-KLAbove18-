@@ -123,12 +123,19 @@ def get_country(country):
     return response.json()
 
 def get_states(request):
-
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
-    response = requests.request("GET", api_url)
-    droplets = response.json()
+    headers = {
+        'Host': 'cdn-api.co-vin.in',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    }
 
-    return render(request,'vaccin_alerts.html',droplets)
+    response = requests.request("GET", api_url, headers=headers)
+    try:
+        payload = response.json()
+    except:
+        print(" NO Payload")
+        payload = "response.json()"
+    return render(request, 'vaccin_alerts.html', payload)
 
 def get_states_ml(request):
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
