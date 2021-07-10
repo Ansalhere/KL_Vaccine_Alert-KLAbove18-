@@ -128,7 +128,7 @@ def get_states_new(request):
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
     }
 
-    response = requests.request("GET", api_url, headers=headers)
+    response = requests.get(api_url, headers=headers)
     try:
         payload = response.json()
     except:
@@ -152,6 +152,7 @@ def get_states(request):
 def get_states_ml(request):
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
     headers = {
+        "accept": "text / html,'application/json', application / xhtml + xml, application / xml;q = 0.9, image / webp, image / apng, * / *;q = 0.8, application / signed - exchange;v = b3;q = 0.9",
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
     }
 
