@@ -124,9 +124,12 @@ def get_country(country):
 
 def get_states_new(request):
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
+    headers = {
+        'Host': 'cdn-api.co-vin.in',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    }
 
-
-    response = requests.request("GET", api_url)
+    response = requests.request("GET", api_url, headers=headers)
     try:
         payload = response.json()
     except:
@@ -160,8 +163,8 @@ def get_states_ml(request):
         payload = response.json()
     except:
         print(" NO Payload")
-        payload = "response.json()"
-    return render(request,'vaccin_alerts_ml.html',payload )
+        payload = {"response.json()": ""}
+    return render(request, 'vaccin_alerts.html', payload)
 
 def get_districts(request):
 
