@@ -136,7 +136,7 @@
                     var district = $(this).find("option:selected").text();
                     console.log(district)
                     console.log(telegram[district])
-                    if(telegram[district]!=''){
+                    if(telegram[district]){
                         $("#telegram").show();
                         $("#telegram").append('<div class="row"><a style="text-color:#0084C6;" href='+telegram[district]+' target="_blank"><div class="col-sm-6 mb-2"><div class="alert alert-light text-center" role="alert"><i style="color:#0084C6;" class="fab fa-2x fa-telegram pb-1"></i><b><br><h6>  Join '+district+' </i>Vaccin Alert Group</b></div></div></a></div>')
                     }
