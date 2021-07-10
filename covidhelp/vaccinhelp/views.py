@@ -127,13 +127,12 @@ def get_states_new(request):
     headers = {
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
     }
-
+    payload = {"":""}
     response = requests.get(api_url, headers=headers)
     try:
         payload = response.json()
     except:
         print(" NO Payload")
-        payload = {"response.json()":""}
     return render(request,'vaccin_alerts.html',payload )
 
 def get_states(request):
@@ -156,12 +155,12 @@ def get_states_ml(request):
         'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
     }
 
-    response = requests.request("GET", api_url, headers=headers)
+    response = requests.get("GET", headers=headers)
     try:
         payload = response.json()
     except:
         print(" NO Payload")
-        payload = {"response.json()": ""}
+        payload = {"states": "hii"}
     return render(request, 'vaccin_alerts_ml.html', payload)
 
 def get_districts(request):
