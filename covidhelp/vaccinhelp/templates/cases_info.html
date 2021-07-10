@@ -60,9 +60,9 @@
                         console.log(result);
 
                         console.log(result[1].Confirmed);
-                        $("#totalcases h2").remove();
+                        $("#totalcases h3").remove();
                         $("#totalcases").text(''+numberWithCommas(result[1].Confirmed)+'');
-                        $("#totaldeaths h2").remove();
+                        $("#totaldeaths h3").remove();
                         $("#totaldeaths").text(''+numberWithCommas(result[1].Deaths)+'');
                         $("#totalrecovered div").remove();
                         $("#totalrecovered").text(''+numberWithCommas(result[1].Recovered)+'');
@@ -79,9 +79,9 @@
                         var yesterDayActive = result[1].Active - result[0].Active
                         var yesterDayDate = result[0].Date
 
-                        $("#yesterdaytotalcases h2").remove();
+                        $("#yesterdaytotalcases h3").remove();
                         $("#yesterdaytotalcases").text(''+numberWithCommas(yesterDayConfirmed)+'');
-                        $("#yesterdaytotaldeaths h2").remove();
+                        $("#yesterdaytotaldeaths h3").remove();
                         $("#yesterdaytotaldeaths").text(''+numberWithCommas(yesterDayDeaths)+'');
                         $("#yesterdaytotalrecovered div").remove();
                         $("#yesterdaytotalrecovered").text(''+numberWithCommas(yesterDayRecovered)+'');
@@ -144,14 +144,14 @@
 
 <div class="container mt-2">
     <div class="row m-1  mt-5 text-muted"><h5>Total Reported</h4></div>
-        <div class="row row-cols-2 bg-dark m-1  rounded">
+        <div class="row row-cols-2 bg-dark  rounded">
             <div class="col-sm-5" id="">
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
-                        <p class="fs-6 ">Total Cases</p>
-                        <h2 class="card-text text-danger" id="totalcases">
+                        <p class="fs-6 ">Total Casesddd</p>
+                        <h3 class="card-text text-danger" id="totalcases">
                             <small>{{countries.Global.TotalConfirmed}}</small>
-                        </h2>
+                        </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
                     </div>
                 </div>
@@ -160,9 +160,9 @@
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
                         <p class="fs-6 ">Recovered</p>
-                        <h2 class="card-text text-success" id="totalrecovered">
+                        <h3 class="card-text text-success" id="totalrecovered">
                             <small>{{countries.Global.TotalRecovered}}</small>
-                        </h2>
+                        </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
                     </div>
                 </div>
@@ -171,7 +171,7 @@
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
                         <p class="fs-6">Total Deaths</p>
-                        <h2 class="card-text text-info" id="totaldeaths">
+                        <h3 class="card-text text-info" id="totaldeaths">
                             <small>{{countries.Global.TotalDeaths}}</small>
                         </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
@@ -182,7 +182,7 @@
                     <div class="card text-white bg-dark ">
                         <div class="card-body">
                             <p class="fs-6 ">Total Active</p>
-                            <h2 class="card-text text-warning" id="totalactive">
+                            <h3 class="card-text text-warning" id="totalactive">
                                 <small>N/A</small>
                             </h3>
     <!--                        <button class="btn btn-primary" type="button">Button</button>-->
@@ -195,7 +195,7 @@
 </div>
 <div class="container mt-2">
     <div class="row m-2 mt-5 text-muted"><h5>Yesterday Reported</h4></div>
-        <div class="row row-cols-2 bg-dark m-2  rounded">
+        <div class="row row-cols-2 bg-dark  rounded">
             <div class="col-sm-5" id="">
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
@@ -211,9 +211,9 @@
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
                         <p class="fs-6 ">Recovered</p>
-                        <h2 class="card-text text-success" id="yesterdaytotalrecovered">
+                        <h3 class="card-text text-success" id="yesterdaytotalrecovered">
                             N/A
-                        </h2>
+                        </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
                     </div>
                 </div>
@@ -222,7 +222,7 @@
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
                         <p class="fs-6">Total Deaths</p>
-                        <h2 class="card-text text-info" id="yesterdaytotaldeaths">
+                        <h3 class="card-text text-info" id="yesterdaytotaldeaths">
                             N/A
                         </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
@@ -233,7 +233,7 @@
                     <div class="card text-white bg-dark ">
                         <div class="card-body">
                             <p class="fs-6 ">Total Active</p>
-                            <h2 class="card-text text-warning" id="yesterdaytotalactive">
+                            <h3 class="card-text text-warning" id="yesterdaytotalactive">
                                 N/A
                             </h3>
     <!--<button class="btn btn-primary" type="button">Button</button>-->

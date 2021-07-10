@@ -138,7 +138,7 @@
                     console.log(telegram[district])
                     if(telegram[district]){
                         $("#telegram").show();
-                        $("#telegram").append('<div class="row"><a style="text-color:#0084C6;" href='+telegram[district]+'><div class="col-sm-6 mb-2"><div class="alert alert-light text-center" role="alert"><i style="color:#0084C6;" class="fab fa-2x fa-telegram pb-1"></i><b><br><h6>  Join '+district+' </i>Vaccin Alert Group</b></div></div></a></div>')
+                        $("#telegram").append('<div class="row border"><a style="text-color:#0084C6;" href='+telegram[district]+'><div class="col-sm-6 mb-2"><div class="alert alert-light text-center" role="alert"><i style="color:#0084C6;" class="fab fa-2x fa-telegram pb-1"></i><b><br><h6>  Join '+district+' </i>Vaccin Alert Group</b></div></div></a></div>')
                     }
                     for (var j = 0 ;telegram.length > j ; j++){
                         console.log(telegram)
@@ -197,8 +197,8 @@
 
 <div class="container ">
 
-    <a href="{% url 'index_ml' %}" class="btn btn-outline-success btn-lg mb-4 float-center rounded-pill">കോവിഡ് റിപ്പോർട്ട്</a>
-    <a href="{% url 'get_states_ml' %}" class="btn btn-success btn-lg mb-4 rounded-pill">വാക്‌സിൻ അലെർട്</a>
+    <a href="{% url 'index_ml' %}" class="btn btn-outline-success btn mb-4 float-center rounded-pill"><small>കോവിഡ് റിപ്പോർട്ട്</small></a>
+    <a href="{% url 'get_states_ml' %}" class="btn btn-success btn mb-4 rounded-pill"><small>വാക്‌സിൻ അലെർട്</small></a>
     <div class="row ">
         <div class=" col-sm-3 mb-2">
             <form action="" method="POST">

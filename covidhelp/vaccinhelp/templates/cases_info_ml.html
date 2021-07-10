@@ -102,8 +102,8 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <a href="{% url 'index_ml' %}" class="btn btn-success btn-lg mb-4 float-center rounded-pill"><small>കോവിഡ് റിപ്പോർട്ട്</small></a>
-    <a href="{% url 'get_states_ml' %}" class="btn btn-outline-success btn-lg mb-4 rounded-pill"><small>വാക്‌സിൻ അലെർട്</small></a>
+    <a href="{% url 'index_ml' %}" class="btn btn-success btn mb-4 float-center rounded-pill"><small>കോവിഡ് റിപ്പോർട്ട്</small></a>
+    <a href="{% url 'get_states_ml' %}" class="btn btn-outline-success btn mb-4 rounded-pill"><small>വാക്‌സിൻ അലെർട്</small></a>
 
     <div class="row d-flex justify-content-center">
         <div class="">
@@ -145,14 +145,14 @@
 
 <div class="container mt-2">
     <div class="row m-1  mt-5 text-muted"><h5>ആകെ റിപ്പോർട്ട് ചെയ്തത്</h4></div>
-        <div class="row row-cols-2 bg-dark m-1  rounded">
+        <div class="row row-cols-2 bg-dark rounded">
             <div class="col-sm-5" id="">
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
                         <p class="fs-6 ">ആകെ രോഗികൾ</p>
-                        <h2 class="card-text text-danger" id="totalcases">
+                        <h3 class="card-text text-danger" id="totalcases">
                             <small>{{countries.Global.TotalConfirmed}}</small>
-                        </h2>
+                        </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
                     </div>
                 </div>
@@ -161,9 +161,9 @@
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
                         <p class="fs-6 ">രോഗം മാറിയവർ</p>
-                        <h2 class="card-text text-success" id="totalrecovered">
+                        <h3 class="card-text text-success" id="totalrecovered">
                             <small>{{countries.Global.TotalRecovered}}</small>
-                        </h2>
+                        </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
                     </div>
                 </div>
@@ -172,7 +172,7 @@
                 <div class="card text-white bg-dark ">
                     <div class="card-body">
                         <p class="fs-6">ആകെ മരണം</p>
-                        <h2 class="card-text text-info" id="totaldeaths">
+                        <h3 class="card-text text-info" id="totaldeaths">
                             <small>{{countries.Global.TotalDeaths}}</small>
                         </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
@@ -183,7 +183,7 @@
                     <div class="card text-white bg-dark ">
                         <div class="card-body">
                             <p class="fs-6 ">ചികിത്സയിലുള്ള രോഗികൾ</p>
-                            <h2 class="card-text text-warning" id="totalactive">
+                            <h3 class="card-text text-warning" id="totalactive">
                                 N/A
                             </h3>
     <!--                        <button class="btn btn-primary" type="button">Button</button>-->
@@ -196,7 +196,7 @@
 </div>
 <div class="container mt-2">
     <div class="row m-2 mt-5 text-muted"><h5>ഇന്നലെ റിപ്പോർട്ട് ചെയ്തത്</h4></div>
-        <div class="row row-cols-2 bg-dark m-2  rounded">
+        <div class="row row-cols-2 bg-dark  rounded">
             <div class="col-sm-5" id="">
                 <div class="card text-white bg-dark ">
                     <div class="card-body">

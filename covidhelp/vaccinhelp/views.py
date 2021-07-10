@@ -73,8 +73,8 @@ def extract_availability_data(response,id):
               if session["available_capacity_dose1"] > 0 or session["available_capacity_dose2"] > 0 :
                 message = "പ്രായം: {} - {} \n" \
                           "സ്ഥലം: {}, \n" \
-                          "1st ഡോസ് വാക്‌സിൻ സ്ലോട്ട്: {},\n"\
-                          "2nd ഡോസ് വാക്‌സിൻ സ്ലോട്ട്: {},\n" \
+                          "ഒന്നാമത്തെ വാക്‌സിൻ സ്ലോട്ട്: {},\n"\
+                          "രണ്ടാമത്തെ വാക്‌സിൻ സ്ലോട്ട്: {},\n" \
                           "വാക്‌സിൻ : {},\n"\
                           "പിൻകോഡ്: {}, \n"\
                               .format(
@@ -124,10 +124,18 @@ def get_country(country):
 
 def get_states_new(request):
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
+    headers = {
+        'Host': 'cdn-api.co-vin.in',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    }
 
-
-    response = requests.request("GET", api_url)
-    return render(request, 'vaccin_alerts.html', response.json())
+    response = requests.request("GET", api_url, headers=headers)
+    try:
+        payload = response.json()
+    except:
+        print(" NO Payload")
+        payload = "response.json()"
+    return render(request,'vaccin_alerts.html',payload )
 
 def get_states(request):
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
@@ -141,30 +149,33 @@ def get_states(request):
         payload = response.json()
     except:
         print(" NO Payload")
-        payload = "response.json()"
-    return render(request, 'vaccin_alerts.html', payload)
+    return render(request,'vaccin_alerts.html',payload )
 
 def get_states_ml(request):
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/states"
-    # headers = {
-    #     'Host': 'cdn-api.co-vin.in',
-    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-    # }
+    headers = {
+        'Host': 'cdn-api.co-vin.in',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    }
 
-    response = requests.request("GET", api_url)
-    droplets = response.json()
-    return render(request,'vaccin_alerts_ml.html',droplets )
+    response = requests.request("GET", api_url, headers=headers)
+    try:
+        payload = response.json()
+    except:
+        print(" NO Payload")
+        payload = "response.json()"
+    return render(request,'vaccin_alerts_ml.html',payload )
 
 def get_districts(request):
 
     state_id = request.GET.get('state_id')
     api_url = "https://cdn-api.co-vin.in/api/v2/admin/location/districts/"+state_id
-    # headers = {
-    #     'Host': 'cdn-api.co-vin.in',
-    #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-    # }
+    headers = {
+        'Host': 'cdn-api.co-vin.in',
+        'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+    }
 
-    response = requests.request("GET", api_url)
+    response = requests.request("GET", api_url, headers=headers)
     payload = response.json()
     print(payload)
     return HttpResponse(simplejson.dumps(payload),content_type='application/json')
@@ -195,12 +206,12 @@ def get_sessions_by_districts(request):
     elif (dateSelected!= ''):
             print('Hi')
             api_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=" + district_id + "&date=" + dateSelected
-            # headers = {
-            #     'Host': 'cdn-api.co-vin.in',
-            #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-            # }
+            headers = {
+                'Host': 'cdn-api.co-vin.in',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+            }
 
-            response = requests.request("GET", api_url)
+            response = requests.request("GET", api_url, headers=headers)
             session['session'].append(response.json())
     else:
         print("Inside date")
@@ -211,12 +222,12 @@ def get_sessions_by_districts(request):
 
         for date in dates:
             api_url = "https://cdn-api.co-vin.in/api/v2/appointment/sessions/public/findByDistrict?district_id=" + district_id + "&date=" + date
-            # headers = {
-            #     'Host': 'cdn-api.co-vin.in',
-            #     'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
-            # }
+            headers = {
+                'Host': 'cdn-api.co-vin.in',
+                'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/90.0.4430.93 Safari/537.36'
+            }
 
-            response = requests.request("GET", api_url)
+            response = requests.request("GET", api_url, headers=headers)
             session['session'].append(response.json())
             print(session)
 
