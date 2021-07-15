@@ -12,7 +12,6 @@ decorator==4.4.2
 django-fancy-cronfield==0.2.0
 django-jquery==3.1.0
 django-jsonify==0.3.0
-dnspython==2.1.0
 email-validator==1.1.2
 future==0.18.2
 idna==2.10
