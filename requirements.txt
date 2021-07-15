@@ -26,7 +26,6 @@ msrest==0.6.19
 Naked==0.1.31
 oauthlib==3.1.0
 oscrypto==1.2.1
-pandas==1.0.5
 pretty-cron==1.0.0
 pycrypto==2.6.1
 pycryptodomex==3.9.9
