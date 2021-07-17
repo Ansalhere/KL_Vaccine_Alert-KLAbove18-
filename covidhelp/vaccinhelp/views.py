@@ -93,6 +93,7 @@ def index(request):
     return render(request, "cases_info.html", context)
 
 def index_ml(request):
+    print("here")
     context = get_summary()
     return render(request, "cases_info_ml.html", context)
 
@@ -104,9 +105,12 @@ def get_covidinfo_bycountry(request):
     return HttpResponse(simplejson.dumps(payload[-2:]), content_type='application/json' )
 
 def get_summary():
-    countries_url = "https://api.covid19api.com/summary"
+    countries_url = "https://api.covid19api.com/countries"
+    print("here get summary")
     r = requests.get(countries_url)
+    print(r)
     droplets = r.json()
+    print(droplets)
     droplet_list = []
     # for i in range(len(droplets['Country'])):
     #     droplet_list.append(droplets['Country'][i])
