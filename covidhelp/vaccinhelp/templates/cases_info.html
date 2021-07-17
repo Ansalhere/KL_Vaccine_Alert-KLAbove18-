@@ -102,16 +102,16 @@
 {% extends 'base.html' %}
 {% block content %}
 <div class="container">
-    <a href="{% url 'index' %}" class="btn btn-success btn-lg mb-4 float-center rounded-pill">Covid Info</a>
-    <a href="{% url 'get_states' %}" class="btn btn-outline-success btn-lg mb-4 rounded-pill">Vaccin Alert</a>
+    <a href="{% url 'index' %}" class="btn btn-success btn mb-4 float-center rounded-pill">Covid Info</a>
+    <a href="{% url 'get_states' %}" class="btn btn-outline-success btn mb-4 rounded-pill">Vaccine Alert</a>
     <div class="row d-flex justify-content-center">
         <div class="">
             <div class="select col-sm-6">
                 <form action="" method="POST">
                     {%csrf_token%}
                     <select id="selectCountry" name="">
-                        <option disabled selected>Global</option>
-                        {% for country in countries.Countries %}
+                        <option disabled selected>Select Country</option>
+                        {% for country in countries %}
                         <option value="{{country.Country}}">{{ country.Country }}</option>
                         {% endfor %}
                     </select>
@@ -151,6 +151,7 @@
                         <p class="fs-6 ">Total Cases</p>
                         <h3 class="card-text text-danger" id="totalcases">
                             <small>{{countries.Global.TotalConfirmed}}</small>
+                            <small>N/A</small>
                         </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
                     </div>
@@ -162,6 +163,7 @@
                         <p class="fs-6 ">Recovered</p>
                         <h3 class="card-text text-success" id="totalrecovered">
                             <small>{{countries.Global.TotalRecovered}}</small>
+                            <small>N/A</small>
                         </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
                     </div>
@@ -173,6 +175,7 @@
                         <p class="fs-6">Total Deaths</p>
                         <h3 class="card-text text-info" id="totaldeaths">
                             <small>{{countries.Global.TotalDeaths}}</small>
+                            <small>N/A</small>
                         </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
                     </div>

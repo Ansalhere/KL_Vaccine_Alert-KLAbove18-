@@ -5,7 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>DigitalOcean Droplets</title>
     <title>Vaccin Tracker</title>
-    
+
      <link
       rel="stylesheet"
       href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css"
@@ -85,12 +85,33 @@
           left: 0;
           margin-top:0;
           padding: 1rem;
-          background-color: #2E0323;
+          background-color: #1E1E1E;
           text-align: center;
         }
         .navbar-nav {
             margin-left: auto;
         }
+<!--        .fab.fa-instagram {-->
+<!--  color: transparent;-->
+<!--  background: radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);-->
+<!--  background: -webkit-radial-gradient(circle at 30% 107%, #fdf497 0%, #fdf497 5%, #fd5949 45%, #d6249f 60%, #285AEB 90%);-->
+<!--  background-clip: text;-->
+<!--  -webkit-background-clip: text;-->
+<!--}-->
+<!--.fab.fa-facebook {-->
+<!--  color: #3b5998;-->
+<!--  background-image: linear-gradient( to bottom, transparent 20%, white 20%, white 93%, transparent 93% );-->
+<!--  background-size: 55%;-->
+<!--  background-position: 70% 0;-->
+<!--  background-repeat: no-repeat;-->
+<!--}-->
+<!--.fab.fa-linkedin {-->
+<!--  color: #0A66C2;-->
+<!--  background-image: linear-gradient( to bottom, transparent 20%, white 20%, white 93%, transparent 93% );-->
+<!--  background-size: 85%;-->
+<!--  background-position: 70% 0;-->
+<!--  background-repeat: no-repeat;-->
+<!--}-->
     </style>
     {% block style %}
     {% endblock %}
@@ -102,17 +123,19 @@
 <header>
 
 
-<nav aria-label="main navigation" class="navbar is-light shadow-lg navbar-expand-sm mb-2 bg-dark" role="navigation">
-<div class="container navbar-brand shadow row">
-    <div class=" navbar-item mb-2 col-md-6">
-        {% load static %} <img src="https://klabove18.s3.ap-south-1.amazonaws.com/KLAbove18.png?response-content-disposition=inline&X-Amz-Security-Token=IQoJb3JpZ2luX2VjEGoaCWV1LXdlc3QtMyJIMEYCIQDV0m9KziG2Or9c%2FzyxANnsL8cjcdaruwkEVNNDjn%2FsZAIhAI5ux0osOEIlOEES7F82lvnEW%2BTS5q7EEW8FzV9%2F5XcXKvYCCGMQABoMMzA4MDM0NDQ2Njc1Igyt2uPsyN4RgBh7UIAq0wJYS8eup%2FRBOStDcuIyxXrjG50KPLTW0lxcJvxxCUDTZlyZqF8YMNRj6eUsEMyusByqkeEmtup23njqQJcYrYC7afMBnDO8M7OH4JpLd53d5EXVx0ogyuKMvqKGMwAqSsTFCTX8baRYqxZr8QmIJ%2FwQrXXYFT%2BYjKehZKisU9g0UuePDGzCGsLfTglzzI0QB%2FMQIudjlMHmYgoNt92baiWVy09qPNFkNb60M1dlnMWZZF1ctto1P%2FOnYJLJUEA3%2Bk2ts1%2BsnwQov89r39tcg9CiUnIhQBiNAYQmceulESpaiwucJnmQXj3HoJI9%2BZ5g2ETn7fRaL4HZbxP7yzeZeL4QTtHBCF0VNl8Ecqrp%2FCDYwgKnfkfmnHyLgPJx%2FBXQXtK%2F5V9ZyYZ4r4Hd9vi7019%2B7NcDmu4T9xW21hq1wo%2FQw7lOVKryV3DOQTdJwc7RkU2vlHgwhajMhwY6sgJLJFbsNG7m6D96EXTtMduyvnnk7Bx5HQYrS4SykvMSfcJses3gJUvP57RUYR09Omf2FVshONPxSRJcdLxT0GC6TFBRuNCIM9QEoDH7mBPi99wekuyrROT24UHDo44b7VFTP%2Bw45k82oLbIfIs93WHgguEhurp33%2FyVDoDvGykJ3kxQXOnLiBEHDTo8TFq0XZEn4z6COJq5J3jHewbEZjvU8liCP83BwJ9D8KYRbrd8pyVT8KWco3M8aCgfAh6gcSfxXy%2FPH%2BgaQNXQf6KweKpctqRqL%2B4K%2BXWn4c%2Bs5C2NycCZc3qknY4PiZ9EAgnCF5K85Fll9nxMgE35FIlUrIJY%2BQMINQLAqe7BuH5f%2BLE1f1NzEQklTnxvBPjFdTj9py%2B9pBWBCIjQ9e6Xa6SX2xfA4AU%3D&X-Amz-Algorithm=AWS4-HMAC-SHA256&X-Amz-Date=20210717T180114Z&X-Amz-SignedHeaders=host&X-Amz-Expires=300&X-Amz-Credential=ASIAUPOCIUVJZXMMGYJ6%2F20210717%2Fap-south-1%2Fs3%2Faws4_request&X-Amz-Signature=34a78ed773e1207471534259b804d9a46a95110765870e98a00ad87ff727316d" width=50%; />
+<nav aria-label="main navigation" class="navbar mb-2 shadow navbar-expand-sm bg-dark" role="navigation">
+<div class="container   ">
+    <div class="row">
+    <div class="">
+        <img src="https://klabove18.s3.ap-south-1.amazonaws.com/KLAbove18.png" width=60%; />
+    </div>
     </div>
     {% if request.path == "/ml" or request.path == "/get_states_ml" %}
-    <div class="float-sm-right  col-md-4">
+    <div class="float-sm-right  ">
     <a href="{% url 'index' %}" class="btn btn-outline-light btn-sm mb-1 float-center rounded-pill d-inline"><small>English</small></a>
         <a href="{% url 'index_ml' %}" class="btn btn-light btn-sm mb-1 rounded-pill d-inline"><small>മലയാളം</small></a></div>
     {% else %}
-    <div class="float-sm-right col-md-4">
+    <div class="float-sm-right ">
     <a href="{% url 'index' %}" class="btn btn-light btn-sm mb-1 float-center rounded-pill d-inline"><small>English</small></a>
         <a href="{% url 'index_ml' %}" class="btn btn-outline-light btn-sm mb-1 rounded-pill d-inline"><small>മലയാളം</small></a></div>
     {% endif %}
@@ -122,7 +145,45 @@
 </header>
     {% block content %}
     {% endblock %}
-    <div class="footer mt-2">Developed By <strong>@ansalka</strong>.</div>
+    <div class="footer mt-2">Hosting Support : Jithin <a class="text-light" href="https://www.linkedin.com/in/jithin-narayanan-963b68118/" role="button"
+    ><i class="fab fa-linkedin fa-lg"></i></a>
+        <div class="footer">Developed and Managing By <strong><a class=" text-white" href="https://www.linkedin.com/in/ansal-k-a-ab162875/">Ansal K A</a></strong></div>
+        <section class="mb-2">
+            <!-- Linkedin -->
+      <a class="btn btn-outline-light btn-floating m-1" href="https://www.linkedin.com/in/ansal-k-a-ab162875/" role="button"
+        ><i class="fab fa-linkedin-in"></i
+      ></a>
+      <!-- Facebook -->
+      <a class="btn btn-outline-light btn-floating m-1" href="https://www.facebook.com/ansalka.jb/" role="button"
+        ><i class="fab fa-facebook-f"></i
+      ></a>
 
+      <!-- Twitter -->
+      <a class="btn btn-outline-light btn-floating m-1" href="#!" role="button"
+        ><i class="fab fa-twitter"></i
+      ></a>
+
+      <!-- Google -->
+      <a class="btn btn-outline-light btn-floating m-1" href="mailto: ansalka.jb@gmail.com" role="button"
+        ><i class="fab fa-google"></i
+      ></a>
+
+      <!-- Instagram -->
+      <a class="btn btn-outline-light btn-floating m-1" href="https://www.instagram.com/ansalka/" role="button"
+        ><i class="fab fa-instagram"></i
+      ></a>
+
+
+
+      <!-- Github -->
+      <a class="btn btn-outline-light btn-floating m-1" href="https://github.com/Ansalhere" role="button"
+        ><i class="fab fa-github"></i
+      ></a>
+    </section>
+<!--        <div class=""><a href="#" style="";"><i class="fab fa-linkedin fa-2x mr-2"></i></a>   <a href="#" style="color: #4267B2;"><i class="fab fa-facebook fa-2x mr-2"></i></a> <a href="#" style="color: #1DA1F2;"><i class="fab fa-twitter fa-2x mr-2"></i></a>  <a href="#" style=""><i class="fab fa-instagram fa-2x mr-2"></i></a>-->
+       <div class="text-center p-3" style="background-color: rgba(0, 0, 0, 0.2);">
+    © 2021 Copyright: FreshersPools
+  </div>
+    </div>
 </body>
 </html>

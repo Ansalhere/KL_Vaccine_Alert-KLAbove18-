@@ -105,7 +105,7 @@ def get_covidinfo_bycountry(request):
     return HttpResponse(simplejson.dumps(payload[-2:]), content_type='application/json' )
 
 def get_summary():
-    countries_url = "https://api.covid19api.com/summary"
+    countries_url = "https://api.covid19api.com/countries"
     print("here get summary")
     r = requests.get(countries_url)
     print(r)
