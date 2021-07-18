@@ -48,6 +48,8 @@
         console.log("Hello world!");
 
         $(document).ready(function(){
+        data = {'country_name' : "India" };
+        covidinfo(data)
         $('select#selectCountry').change(function () {
                    console.log("Hello world!");
                    var optionSelected = $(this).find("option:selected").val();
@@ -55,14 +57,18 @@
                    console.log(optionSelected);
 
                     data = {'country_name' : optionSelected };
+                    covidinfo(data)
+                    });
+
+                    function covidinfo(data){
 
                     ajax('get_covidinfo_bycountry',data,function(result){
                         console.log(result);
 
                         console.log(result[1].Confirmed);
-                        $("#totalcases h2").remove();
+                        $("#totalcases h3").remove();
                         $("#totalcases").text(''+numberWithCommas(result[1].Confirmed)+'');
-                        $("#totaldeaths h2").remove();
+                        $("#totaldeaths h3").remove();
                         $("#totaldeaths").text(''+numberWithCommas(result[1].Deaths)+'');
                         $("#totalrecovered div").remove();
                         $("#totalrecovered").text(''+numberWithCommas(result[1].Recovered)+'');
@@ -79,9 +85,9 @@
                         var yesterDayActive = result[1].Active - result[0].Active
                         var yesterDayDate = result[0].Date
 
-                        $("#yesterdaytotalcases h2").remove();
+                        $("#yesterdaytotalcases h3").remove();
                         $("#yesterdaytotalcases").text(''+numberWithCommas(yesterDayConfirmed)+'');
-                        $("#yesterdaytotaldeaths h2").remove();
+                        $("#yesterdaytotaldeaths h3").remove();
                         $("#yesterdaytotaldeaths").text(''+numberWithCommas(yesterDayDeaths)+'');
                         $("#yesterdaytotalrecovered div").remove();
                         $("#yesterdaytotalrecovered").text(''+numberWithCommas(yesterDayRecovered)+'');
@@ -91,7 +97,7 @@
                         $("#yesterdaylastupdated").append(''+yesterDayDate+'<div/>');
 
                  });
-             });
+                 };
             });
 
 
