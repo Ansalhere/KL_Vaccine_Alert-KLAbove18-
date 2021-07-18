@@ -117,7 +117,7 @@
                 <form action="" method="POST">
                     {%csrf_token%}
                     <select id="selectCountry" name="">
-                        <option disabled selected>രാജ്യം തിരഞ്ഞെടുക്കുക</option>
+                        <option selected value="India">ഇന്ത്യ</option>
                         {% for country in countries %}
                         <option value="{{country.Country}}">{{ country.Country }}</option>
                         {% endfor %}
