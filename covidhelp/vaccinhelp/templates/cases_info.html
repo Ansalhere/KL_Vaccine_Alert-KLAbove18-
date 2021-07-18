@@ -48,6 +48,8 @@
         console.log("Hello world!");
 
         $(document).ready(function(){
+        data = {'country_name' : "India" };
+        covidinfo(data)
         $('select#selectCountry').change(function () {
                    console.log("Hello world!");
                    var optionSelected = $(this).find("option:selected").val();
@@ -55,6 +57,10 @@
                    console.log(optionSelected);
 
                     data = {'country_name' : optionSelected };
+                    covidinfo(data)
+                    });
+
+                    function covidinfo(data){
 
                     ajax('get_covidinfo_bycountry',data,function(result){
                         console.log(result);
@@ -91,7 +97,7 @@
                         $("#yesterdaylastupdated").append(''+yesterDayDate+'<div/>');
 
                  });
-             });
+                 };
             });
 
 
@@ -110,7 +116,7 @@
                 <form action="" method="POST">
                     {%csrf_token%}
                     <select id="selectCountry" name="">
-                        <option disabled selected>Select Country</option>
+                        <option selected>India</option>
                         {% for country in countries %}
                         <option value="{{country.Country}}">{{ country.Country }}</option>
                         {% endfor %}
@@ -150,7 +156,7 @@
                     <div class="card-body">
                         <p class="fs-6 ">Total Cases</p>
                         <h3 class="card-text text-danger" id="totalcases">
-                            <small>{{countries.Global.TotalConfirmed}}</small>
+                            <small>{{countries.Confirmed}}</small>
                             <small>N/A</small>
                         </h3>
     <!--                    <button class="btn btn-primary" type="button">Button</button>-->
