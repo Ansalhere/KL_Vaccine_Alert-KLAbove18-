@@ -4,6 +4,7 @@ import simplejson as simplejson
 from django.shortcuts import render
 from django.http import HttpResponse
 import requests
+import collections
 
 # from .models import Contact
 
@@ -110,13 +111,14 @@ def get_summary():
     r = requests.get(countries_url)
     print(r)
     droplets = r.json()
-    print(droplets)
     droplet_list = []
-    # for i in range(len(droplets['Country'])):
-    #     droplet_list.append(droplets['Country'][i])
+    print(droplets)
+
+    sorted_countries = sorted(droplets,key = lambda x: x.get("Country"))
+    print(sorted_countries)
 
     payload = {
-        "countries": droplets
+        "countries": sorted_countries
     }
     return payload
 
