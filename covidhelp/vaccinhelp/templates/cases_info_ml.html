@@ -2,10 +2,31 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.
-    <link href="https://assets.digitalocean.com/logos/favicon.png" rel="shortcut icon" type="image/png"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://code.jquery.com/jquery-latest.min.js"></script>
+    <link
+      rel="stylesheet"
+      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.1/css/all.min.css"
+      integrity="sha512-+4zCK9k+qNFUR5X+cKL9EIR+ZOhtIloNl9GIKS57V1MyNsYpYcUrUeQc9vNfzsWfV28IaLL3i96P9sdNyeRssA=="
+      crossorigin="anonymous"
+    />
     <script>
+        var telegram={
+            "Ernakulam":"https://telegram.me/ernakulam_vaccin_alert",
+            "Idukki":"https://telegram.me/idukki_vaccin_alert",
+            "Wayanad":"https://telegram.me/Wayanadvaccine_alert",
+            "Thrissur":"https://telegram.me/Thrissurvaccine_alert",
+            "Thiruvananthapuram":"https://telegram.me/Thiruvananthapuramvaccine_alert",
+            "Pathanamthitta":"https://telegram.me/Pathanamthittavaccine_alert",
+            "Malappuram":"https://telegram.me/malappuramvaccine_alert",
+            "Palakkad":"https://telegram.me/palakkadvaccine_alert",
+            "Kozhikode":"https://telegram.me/Kozhikode_vaccin_alert",
+            "Kottayam":"https://telegram.me/Kottayam_vaccin_alert",
+            "Kollam":"https://telegram.me/Kollam_vaccin_alert",
+            "Kasaragod":"https://telegram.me/Kasaragod_vaccin_alert",
+            "Kannur":"https://telegram.me/Kannur_vaccin_alert",
+            "Alappuzha":"https://telegram.me/alappuzha_vaccin_alert"
+         }
         var keywords=[
                 'role',
                 'base',
@@ -20,9 +41,7 @@
                 'distinct',
                 'not',
             ]
-            function numberWithCommas(x) {
-                return x.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
-            }
+
             function getCookie(name) {
                 var cookieValue = null;
                 if (document.cookie && document.cookie != '') {
@@ -44,216 +63,299 @@
                 data ['csrfmiddlewaretoken'] = getCookie('csrftoken')
                 $.get(url, data , callback);
             }
-        console.log("Hello world!");
+            $(document).ready(function(){
+                $("#loading").hide();
+                $("#slot").empty();
+                $("#telegram").empty();
+                $('select#selectState').change(function () {
+                        var optionSelected = $(this).find("option:selected").val();
+                            data = {'state_id' : optionSelected };
+                            ajax('get_districts',data,function(result){
+                                $("#selectDistrict").empty();
+                                $("#selectDistrict").append($("<option disabled ></option>")
+                                        .attr("value", "districts")
+                                        .text("Districts"))
+                                for (var i = result.districts.length - 1; i >= 0; i--) {
+                                    $("#selectDistrict").append($("<option></option>")
+                                        .attr("value", result.districts[i].district_id)
+                                        .text(result.districts[i].district_name))
+                                }
+                            });
+                });
+                function comp(a, b) {
+                    return new Date(a.date).getTime() - new Date(b.date).getTime();
+                  }
 
-        $(document).ready(function(){
-        data = {'country_name' : "India" };
-        covidinfo(data)
-        $('select#selectCountry').change(function () {
-                   console.log("Hello world!");
-                   var optionSelected = $(this).find("option:selected").val();
-                   console.log($.type(optionSelected));
-                   console.log(optionSelected);
+                $("#pincodeForm").submit(function(e) {
+                    $("#selectSessions").empty();
+                    $("#sessions").empty();
+                    $("#SlotAvailability").empty();
+                    $("#loading").show();
+                    $("#telegram").empty();
+                    e.preventDefault(); // avoid to execute the actual submit of the form.
+                    data = {'pincode' : $("#pincode").val() ,
+                                };
+                        ajax('get_sessions_by_districts',data,function(result){
 
-                    data = {'country_name' : optionSelected };
-                    covidinfo(data)
+                                var slotCheck = false
+                                for (var i = 0; result.session.length > i; i++) {
+                                    var newSession = result.session[i];
+                                    console.log(newSession.sessions)
+                                    //newSession.sessions.sort(comp)
+                                    for (var j = 0 ;newSession.centers.length > j ; j++){
+
+                                        if(newSession.centers[j].fee_type == 'Free'){
+                                            var badge = ' bg-success ml-1'
+                                        }
+                                        else{
+                                            var badge = 'bg-danger ml-1'
+                                        }
+                                        if(newSession.centers[j].available_capacity_dose1>0){
+                                        slotCheck = true
+                                        var htmlcard = '<div class="col"><div class="card h-100 bg-dark text-white"><img src="" class="card-img-top" ><div class="card-body"><h8 class="card-title" id="sessions">'+newSession.centers[j].name+'<small class="float-right badge '+badge+'">'+newSession.centers[j].fee_type+'</small><small class="float-right badge rounded-pill bg-warning">'+newSession.centers[j].min_age_limit+'+</small></h8><p class="card-text mt-1 fs-6">'+newSession.centers[j].address+'</p><p class="m-1 badge bg-light text-dark">Available slots : '+newSession.centers[j].available_capacity+'</p><br><p class="m-1 badge bg-light text-dark">Dose 1 slots : '+newSession.centers[j].available_capacity_dose1+'</p><p class="m-1 badge bg-light text-dark">Dose 2 slots : '+newSession.centers[j].available_capacity_dose2+'</p></div><div class="card-footer"><small class="text-muted">Date : '+newSession.centers[j].date+'</small><small class="text-muted float-right">Vaccine : '+newSession.centers[j].vaccine+'</small></div></div></div'
+                                        $("#sessions").append(htmlcard)
+                                        $("#loading").hide();
+                                        }
+                                    }
+                                }
+                                if (slotCheck == false){
+                                    $("#loading").hide();
+                                    console.log('No Slots available')
+                                    $("#sessions").append('<div class="alert alert-danger" role="alert"><div id="SlotAvailability">No Slots available/updated for next seven days</div></div>')
+                                }
+                        });
+                });
+                $('select#selectDistrict').change(function () {
+                    $("#selectSessions").empty();
+                    $("#sessions").empty();
+                    $("#SlotAvailability").empty();
+                    $("#loading").show();
+                    $("#telegram").empty();
+                    var optionSelected = $(this).find("option:selected").val();
+                    var district = $(this).find("option:selected").text();
+                    console.log(district)
+                    console.log(telegram[district])
+                    if(telegram[district]){
+                        $("#telegram").show();
+                        $("#telegram").append('<div class="row border"><a style="text-color:#0084C6;" href='+telegram[district]+'><div class="col-sm-6 mb-2"><div class="alert alert-light text-center" role="alert"><i style="color:#0084C6;" class="fab fa-2x fa-telegram pb-1"></i><b><br><h6>  Join '+district+' </i>Vaccin Alert Group</b></div></div></a></div>')
+                    }
+                    for (var j = 0 ;telegram.length > j ; j++){
+                        console.log(telegram)
+                            if(optionSelected==telegram[j]){
+                                console.log(telegram[j])
+                            }
+                    }
+                        data = {'district_id' : optionSelected ,
+                                'date' : ""
+                                };
+                        ajax('get_sessions_by_districts',data,function(result){
+
+                        printSessionResults(result)
+
+                        });
+
                     });
 
-                    function covidinfo(data){
+                        function printSessionResults(result){
 
-                    ajax('get_covidinfo_bycountry',data,function(result){
-                        console.log(result);
+                            console.log(result)
+                            console.log(result.session)
+                                var slotCheck = false
+                                for (var i = 0; result.session.length > i; i++) {
+                                    var newSession = result.session[i];
+                                    console.log(newSession.sessions)
+                                    //newSession.sessions.sort(comp)
+                                    for (var j = 0 ;newSession.sessions.length > j ; j++){
 
-                        console.log(result[1].Confirmed);
-                        $("#totalcases h3").remove();
-                        $("#totalcases").text(''+numberWithCommas(result[1].Confirmed)+'');
-                        $("#totaldeaths h3").remove();
-                        $("#totaldeaths").text(''+numberWithCommas(result[1].Deaths)+'');
-                        $("#totalrecovered div").remove();
-                        $("#totalrecovered").text(''+numberWithCommas(result[1].Recovered)+'');
-                        $("#totalactive div").remove();
-                        $("#totalactive").text(''+numberWithCommas(result[1].Active)+'');
-                        $("#lastupdated div").remove();
-                        $("#lastupdated").append(''+(result[1].Date)+'<div/>');
+                                        if(newSession.sessions[j].fee_type == 'Free'){
+                                            var badge = ' bg-success ml-1'
+                                        }
+                                        else{
+                                            var badge = 'bg-danger ml-1'
+                                        }
+                                        if(newSession.sessions[j].available_capacity_dose1>0){
+                                        slotCheck = true
 
-
-
-                        var yesterDayConfirmed = result[1].Confirmed - result[0].Confirmed
-                        var yesterDayDeaths = result[1].Deaths - result[0].Deaths
-                        var yesterDayRecovered = result[1].Recovered - result[0].Recovered
-                        var yesterDayActive = result[1].Active - result[0].Active
-                        var yesterDayDate = result[0].Date
-
-                        $("#yesterdaytotalcases h3").remove();
-                        $("#yesterdaytotalcases").text(''+numberWithCommas(yesterDayConfirmed)+'');
-                        $("#yesterdaytotaldeaths h3").remove();
-                        $("#yesterdaytotaldeaths").text(''+numberWithCommas(yesterDayDeaths)+'');
-                        $("#yesterdaytotalrecovered div").remove();
-                        $("#yesterdaytotalrecovered").text(''+numberWithCommas(yesterDayRecovered)+'');
-                        $("#yesterdaytotalactive div").remove();
-                        $("#yesterdaytotalactive").text(''+'N/A'+'');
-                        $("#yesterdaylastupdated div").remove();
-                        $("#yesterdaylastupdated").append(''+yesterDayDate+'<div/>');
-
-                 });
-                 };
+                                        var htmlcard = '<div class="col"><div class="card h-100 bg-dark text-white"><img src="" class="card-img-top" ><div class="card-body"><h8 class="card-title" id="sessions">സ്ഥലം :'+newSession.sessions[j].name+'<small class="float-right badge '+badge+'">'+newSession.sessions[j].fee_type+'</small><small class="float-right badge rounded-pill bg-warning">'+newSession.sessions[j].min_age_limit+'+</small></h8><p class="card-text mt-1 fs-6">'+newSession.sessions[j].address+'</p><p class="m-1 badge bg-light text-dark">ആകെ സ്ലോട്ട് : '+newSession.sessions[j].available_capacity+'</p><br><p class="m-1 badge bg-light text-dark">1st ഡോസ് സ്ലോട്ട് : '+newSession.sessions[j].available_capacity_dose1+'</p><p class="m-1 badge bg-light text-dark">2nd ഡോസ് സ്ലോട്ട് : '+newSession.sessions[j].available_capacity_dose2+'</p></div><div class="card-footer"><small class="text-muted">ദിവസം : '+newSession.sessions[j].date+'</small><small class="text-muted float-right">വാക്‌സിൻ : '+newSession.sessions[j].vaccine+'</small></div></div></div'
+                                        $("#sessions").append(htmlcard)
+                                        $("#loading").hide();
+                                        }
+                                    }
+                                }
+                                if (slotCheck == false){
+                                    $("#loading").hide();
+                                    console.log('No Slots available')
+                                    $("#sessions").append('<div class="col"><div class="alert alert-danger" role="alert"><div id="SlotAvailability">No Slots available/updated for next seven days</div></div>')
+                                }
+                            }
             });
-
-
-
     </script>
 </head>
-
 {% extends 'base.html' %}
 {% block content %}
-<div class="container">
-    <a href="{% url 'index_ml' %}" class="btn btn-success btn-sm mb-4 float-center rounded-pill"><small>കോവിഡ് റിപ്പോർട്ട്</small></a>
-    <a href="{% url 'get_states_ml' %}" class="btn btn-outline-success btn-sm mb-4 rounded-pill"><small>വാക്‌സിൻ അലെർട്</small></a>
 
-    <div class="row d-flex justify-content-center">
-        <div class="">
-            <div class="select col-sm-6">
-                <form action="" method="POST">
-                    {%csrf_token%}
-                    <select id="selectCountry" name="">
-                        <option selected value="India">ഇന്ത്യ</option>
-                        {% for country in countries %}
-                        <option value="{{country.Country}}">{{ country.Country }}</option>
-                        {% endfor %}
-                    </select>
-                </form>
-            </div>
+<div class="container ">
+
+    <a href="{% url 'index_ml' %}" class="btn btn-outline-success btn-sm mb-4 float-center rounded-pill"><small>കോവിഡ് റിപ്പോർട്ട്</small></a>
+    <a href="{% url 'get_states_ml' %}" class="btn btn-success btn-sm mb-4 rounded-pill"><small>വാക്‌സിൻ അലെർട്</small></a>
+    <div class="row ">
+        <div class=" col-sm-3 mb-2">
+            <form action="" method="POST">
+                {%csrf_token%}
+                <select id="selectState" class="form-select" name="">
+                    <option disabled selected>സംസ്ഥാനം തിരഞ്ഞെടുക്കുക</option>
+                    {% for state in states %}
+                        <option value="{{state.state_id}}">{{ state.state_name }}</option>
+                    {% endfor %}
+                </select>
+            </form>
         </div>
-    </div>
-
-
-<!--    <h2>Total Cases</h2>-->
-<!--    <h3>{{ countries.Global.TotalConfirmed }}</h3>-->
-<!--    <h2>New Cases</h2>-->
-<!--    {{ countries.Global.NewConfirmed  }}-->
-<!--    <h2>New Deaths</h2>-->
-<!--    {{ countries.Global.NewDeaths  }}-->
-<!--    <h2>Total Deaths</h2>-->
-<!--    {{ countries.Global.TotalDeaths }}-->
-
-<!--<h2>Total Cases</h2>-->
-<!--<div id="totalcases"></div>-->
-<!--<h2>Total Recovered</h2>-->
-<!--<div id="totalrecovered"></div>-->
-<!--<h2>Total Deaths</h2>-->
-<!--<div id="totaldeaths"></div>-->
-<!--<h2>Total Active</h2>-->
-<!--<div id="totalactive"></div>-->
-<!--<div id="lastupdated"></div>-->
-</div>
-
-
-<div class="container mt-2">
-    <div class="row m-1  mt-5 text-muted"><h5>ആകെ റിപ്പോർട്ട് ചെയ്തത്</h4></div>
-        <div class="row row-cols-2 bg-dark rounded">
-            <div class="col-sm-5" id="">
-                <div class="card text-white bg-dark ">
-                    <div class="card-body">
-                        <p class="fs-6 ">ആകെ രോഗികൾ</p>
-                        <h3 class="card-text text-danger" id="totalcases">
-                            <small>{{countries.Global.TotalConfirmed}}</small>
-                            <small>N/A</small>
-                        </h3>
-    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-6" id="">
-                <div class="card text-white bg-dark ">
-                    <div class="card-body">
-                        <p class="fs-6 ">രോഗം മാറിയവർ</p>
-                        <h3 class="card-text text-success" id="totalrecovered">
-                            <small>{{countries.Global.TotalRecovered}}</small>
-                            <small>N/A</small>
-                        </h3>
-    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-5" id="">
-                <div class="card text-white bg-dark ">
-                    <div class="card-body">
-                        <p class="fs-6">ആകെ മരണം</p>
-                        <h3 class="card-text text-info" id="totaldeaths">
-                            <small>{{countries.Global.TotalDeaths}}</small>
-                            <small>N/A</small>
-                        </h3>
-    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
-                    </div>
-                </div>
-            </div>
-                <div class="col-sm-5" id="">
-                    <div class="card text-white bg-dark ">
-                        <div class="card-body">
-                            <p class="fs-6 ">ചികിത്സയിലുള്ള രോഗികൾ</p>
-                            <h3 class="card-text text-warning" id="totalactive">
-                                <small>N/A</small>
-                            </h3>
-    <!--                        <button class="btn btn-primary" type="button">Button</button>-->
-                        </div>
-                    </div>
-                </div>
-            </div>
+        <div class="col-sm-3 mb-1">
+            <form action="" method="POST">
+                {%csrf_token%}
+                <select id="selectDistrict" class="form-select" name="">
+                    <option disabled selected>ജില്ല തിരഞ്ഞടുക്കുക</option>
+                </select>
+            </form>
         </div>
     </div>
 </div>
-<div class="container mt-2">
-    <div class="row m-2 mt-5 text-muted"><h5>ഇന്നലെ റിപ്പോർട്ട് ചെയ്തത്</h4></div>
-        <div class="row row-cols-2 bg-dark  rounded">
-            <div class="col-sm-5" id="">
-                <div class="card text-white bg-dark ">
-                    <div class="card-body">
-                        <p class="fs-6 ">ആകെ രോഗികൾ</p>
-                        <h2 class="card-text text-danger" id="yesterdaytotalcases">
-                            <small>N/A</small>
-                        </h2>
-    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-5" id="">
-                <div class="card text-white bg-dark ">
-                    <div class="card-body">
-                        <p class="fs-6 ">രോഗം മാറിയവർ</p>
-                        <h2 class="card-text text-success" id="yesterdaytotalrecovered">
-                            <small>N/A</small>
-                        </h2>
-    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
-                    </div>
-                </div>
-            </div>
-            <div class="col-sm-5" id="">
-                <div class="card text-white bg-dark ">
-                    <div class="card-body">
-                        <p class="fs-6">ആകെ മരണം</p>
-                        <h2 class="card-text text-info" id="yesterdaytotaldeaths">
-                            <small>N/A</small>
-                        </h3>
-    <!--                    <button class="btn btn-primary" type="button">Button</button>-->
-                    </div>
-                </div>
-            </div>
-                <div class="col-sm-5" id="">
-                    <div class="card text-white bg-dark ">
-                        <div class="card-body">
-                            <p class="fs-6 ">ചികിത്സയിലുള്ള രോഗികൾ</p>
-                            <h2 class="card-text text-warning" id="yesterdaytotalactive">
-                                <small>N/A</small>
-                            </h3>
-    <!--<button class="btn btn-primary" type="button">Button</button>-->
-                        </div>
-                    </div>
-                </div>
-            </div>
+<div class="container text-center"><div class="mb-2 col-sm-3">OR </div>
+    <div class="float-center ">
+    <form id="pincodeForm" class=" form-inline float-center">
+        <label class="sr-only" for="inlineFormInputName2">Name</label>
+        <input type="text" class="form-control mb-3 mr-sm-2" id="pincode" placeholder="പിൻകോഡ്">
+        <button type="submit" class="btn btn-primary mb-3">Submit</button>
+    </form>
+</div>
+</div>
+<div class="container ">
+    <div class="row ">
+        <div class=" col-sm-6 mb-2">
+        <div class="alert alert-primary" role="alert">
+            സ്ലോട്ട് ബുക്ക്‌ ചെയ്യാൻ: <a style="" href="https://www.cowin.gov.in/home">
+                <b>cowin.gov.in</b>
+              </a>
+        </div>
         </div>
     </div>
 </div>
-        {% endblock %}
+
+<div class="container" id="telegram" >
+
+    </div>
+</div>
 
 
+
+<div class="container ">
+    <div class="row row-cols-1 row-cols-sm-3 g-4 " id="sessions">
+    </div>
+</div>
+    <div id="loading" class="p-3 text-center"><div class="loadingio-spinner-spinner-70hfitl2g">Searching..<div class="ldio-uglwfrhuisc">
+        <div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div><div></div>
+        </div></div>
+        <style type="text/css">
+        @keyframes ldio-uglwfrhuisc {
+          0% { opacity: 1 }
+          100% { opacity: 0 }
+        }
+        .ldio-uglwfrhuisc div {
+          left: 61.1px;
+          top: 19.5px;
+          position: absolute;
+          animation: ldio-uglwfrhuisc linear 1s infinite;
+          background: #fe718d;
+          width: 7.800000000000001px;
+          height: 15.600000000000001px;
+          border-radius: 3.9000000000000004px / 7.800000000000001px;
+          transform-origin: 3.9000000000000004px 45.5px;
+        }.ldio-uglwfrhuisc div:nth-child(1) {
+          transform: rotate(0deg);
+          animation-delay: -0.9166666666666666s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(2) {
+          transform: rotate(30deg);
+          animation-delay: -0.8333333333333334s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(3) {
+          transform: rotate(60deg);
+          animation-delay: -0.75s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(4) {
+          transform: rotate(90deg);
+          animation-delay: -0.6666666666666666s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(5) {
+          transform: rotate(120deg);
+          animation-delay: -0.5833333333333334s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(6) {
+          transform: rotate(150deg);
+          animation-delay: -0.5s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(7) {
+          transform: rotate(180deg);
+          animation-delay: -0.4166666666666667s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(8) {
+          transform: rotate(210deg);
+          animation-delay: -0.3333333333333333s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(9) {
+          transform: rotate(240deg);
+          animation-delay: -0.25s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(10) {
+          transform: rotate(270deg);
+          animation-delay: -0.16666666666666666s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(11) {
+          transform: rotate(300deg);
+          animation-delay: -0.08333333333333333s;
+          background: #fe718d;
+        }.ldio-uglwfrhuisc div:nth-child(12) {
+          transform: rotate(330deg);
+          animation-delay: 0s;
+          background: #fe718d;
+        }
+        .loadingio-spinner-spinner-70hfitl2g {
+          width: 130px;
+          height: 130px;
+          display: inline-block;
+          overflow: hidden;
+          background: #161517;
+        }
+        .ldio-uglwfrhuisc {
+          width: 100%;
+          height: 100%;
+          position: relative;
+          transform: translateZ(0) scale(1);
+          backface-visibility: hidden;
+          transform-origin: 0 0; /* see note above */
+        }
+        .ldio-uglwfrhuisc div { box-sizing: content-box; }
+        /* generated by https://loading.io/ */
+        </style>
+    </div>
+</div>
+<div class="container mt-5 mb-4">
+    <div class="row ">
+        <div class=" col-sm-6 mb-2">
+<form id="feedback" class="">
+    <div class="form-group">
+        <label class="light fs-6 fw-lighter fw-light font-monospace" for="exampleFormControlTextarea1">Request/Feedback</label>
+        <textarea class="form-control fst-italic" id="exampleFormControlTextarea1" placeholder="Add telegram group for 683556 pincode" rows="3"></textarea>
+      </div>
+    <div class="form-group">
+      <label class="font-monospace fs-6" for="exampleFormControlInput1">Email address</label>
+      <input type="email" class="form-control fst-italic" id="exampleFormControlInput1" placeholder="name@example.com">
+    </div>
+
+    <button type="submit" class="btn btn-primary">Send Feedback</button>
+  </form>
+  </div>
+  </div>
+</div>
+{% endblock %}
 </html>
